@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="fr-BE">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JPV Squad — Gala Héritage</title>
+<meta name="description" content="Le Gala Héritage de la JPV Squad, la jeunesse de l’église La Pierre Vivante de Gembloux. Une soirée de communion, de partage et de célébration au profit de la construction du nouveau temple.">
+<meta property="og:locale" content="fr_BE">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JPV Squad — Gala Héritage">
+<meta property="og:description" content="Samedi 14 novembre 2026, Gembloux. Au profit de la construction du nouveau temple.">
+<meta property="og:site_name" content="JPV Squad">
+<meta name="theme-color" content="#4c181a">
+<link rel="stylesheet" href="css/site.css">
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   Héros — galaxie de photos en orbite autour du titre.
+   Deux essaims tournent en sens inverse, à des vitesses différentes :
+   le motif ne se répète jamais à l'œil. Angles, distances, hauteurs,
+   tailles et inclinaisons sont irréguliers, figés à la construction.
+   Tout est en CSS : le compositeur travaille, le fil principal dort.
+   ════════════════════════════════════════════════════════════════════ */
+/* ── Praise, pour le seul mot « Héritage » ──────────────────────────────────
+   Fichier OTF servi tel quel : la licence de la fonderie interdit la
+   conversion de format, donc pas de woff2. Voir fonts/praise/LICENCE-praise.txt. */
+@font-face{
+  font-family:"Praise";
+  src:url("fonts/praise/Praise.otf") format("opentype");
+  font-weight:400; font-style:normal; font-display:swap;
+}
+.praise{
+  font-family:"Praise", Columbia, serif;
+  font-size:clamp(50px, 15.5vw, 200px);  /* seul mot du héros : sa propre échelle,
+                                            bornée pour ne jamais déborder */
+  line-height:.9;
+  letter-spacing:.01em;
+  display:inline-block;
+  padding:0 .04em .06em;
+}
+
+/* ── « Gala », en anglaise rouge, posé sur le bas-droit de HÉRITAGE ─────────
+   ITC Edwardian Script est une police Monotype payante : à défaut, on prend
+   la plus proche en licence libre. Voir README, section « Le titre du héros ». */
+@font-face{
+  font-family:"Anglaise";
+  src:url("fonts/script/mrs-saint-delafield.woff2") format("woff2");
+  font-weight:400; font-style:normal; font-display:swap;
+}
+/* largeur ajustée au mot, puis recentrée : en inline-block le bloc se collait à gauche */
+.titre{ position:relative; display:block; width:fit-content; margin-inline:auto }
+.gala{
+  position:absolute;
+  right:-.02em; bottom:-.04em;
+  font-family:"Anglaise", cursive;
+  color:#e01f1f;
+  font-size:clamp(23px, 6.8vw, 90px);   /* ~45 % de HÉRITAGE, comme la maquette */
+  line-height:1;
+  text-transform:none;
+  letter-spacing:0;
+  white-space:nowrap;
+  pointer-events:none;
+}
+
+/* ── Billetterie Billetweb ─────────────────────────────────────────────────
+   Le contenu de l'iframe vient d'un autre domaine : impossible de le styler
+   d'ici. On soigne donc tout ce qui l'entoure, et les couleurs internes se
+   règlent côté Billetweb (Options → Apparence). Voir README. */
+.billetterie__intro{
+  font-family:'Overused', sans-serif;
+  color:var(--rose);
+  font-size:15px; line-height:1.6;
+  max-width:62ch; margin:0 0 40px;
+}
+.billetterie__cadre{
+  position:relative;
+  background:var(--gray);
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 30px 70px rgba(0,0,0,.45);
+  min-height:520px;
+}
+.billetterie__cadre iframe{
+  display:block; width:100%; border:0;
+  height:1250px;                       /* large, pour qu'il n'y ait pas de second
+                                          défilement à l'intérieur du cadre */
+  opacity:0; transition:opacity .5s ease;
+}
+.billetterie__cadre iframe.pret{ opacity:1 }
+@media (max-width:767px){ .billetterie__cadre iframe{ height:1550px } }
+
+.billetterie__attente{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Overused', sans-serif; font-size:14px;
+  letter-spacing:.06em; color:#7a5f57;
+  pointer-events:none; transition:opacity .4s ease;
+}
+.billetterie__attente.parti{ opacity:0 }
+
+.billetterie__repli{
+  font-family:'Overused', sans-serif;
+  font-size:13px; color:var(--rose); margin:20px 0 0;
+}
+.billetterie__repli a{ color:var(--gray); text-decoration:underline; text-underline-offset:3px }
+
+/* ── Le bouton de réservation : rectangle rouge aux bords ondulés, en Praise ──
+   Les rayons sont donnés en pixels (pas en %) pour rester un rectangle :
+   en pourcentage la forme dégénère en ellipse. */
+a.btn-gala{
+  /* flex de niveau bloc + largeur ajustée : c'est ce qui permet le centrage par
+     marges auto — en inline-flex, margin-inline:auto ne fait rien */
+  display:flex; align-items:center; justify-content:center;
+  width:fit-content; margin:24px auto 0; gap:0;
+  background:#e01f1f; color:#fff;
+  font-family:"Praise", Columbia, serif;
+  text-transform:none; letter-spacing:.015em;
+  font-size:clamp(26px, 3.4vw, 46px); line-height:1;
+  padding:.30em 1.05em .38em;
+  border-radius:38px 52px 40px 56px / 48px 36px 54px 40px;
+  box-shadow:0 18px 44px rgba(224,31,31,.28);
+  animation:btn-ondule 11s ease-in-out infinite;
+  transition:transform .45s var(--ease-in-out), box-shadow .45s var(--ease-in-out);
+}
+a.btn-gala--hero{ font-size:clamp(30px, 4.3vw, 58px) }
+@keyframes btn-ondule{
+  0%,100%{ border-radius:38px 52px 40px 56px / 48px 36px 54px 40px }
+  25%    { border-radius:54px 36px 56px 40px / 36px 52px 38px 54px }
+  50%    { border-radius:44px 56px 36px 52px / 54px 40px 48px 36px }
+  75%    { border-radius:56px 40px 52px 36px / 40px 56px 36px 52px }
+}
+a.btn-gala:hover{
+  transform:translateY(-3px);
+  box-shadow:0 26px 58px rgba(224,31,31,.42);
+}
+@media (prefers-reduced-motion: reduce){ a.btn-gala{ animation:none } }
+
+/* ── Fond vidéo de la section « à propos » ─────────────────────────────────
+   Le raccord avec le héros est une courbe, pas une arête : le cadre vidéo est
+   découpé en dôme, et l'aplat noir placé derrière prolonge le héros dans ce
+   qui dépasse du dôme. */
+.apropos-noir{ position:absolute; inset:0; z-index:0; background:#000; pointer-events:none }
+.apropos-fond{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  overflow:clip;   /* surtout pas hidden : un ancêtre scrollable désactive le sticky */
+  border-top-left-radius:  50% clamp(46px, 8vw, 130px);
+  border-top-right-radius: 50% clamp(46px, 8vw, 130px);
+}
+.apropos-fond video{
+  display:block; width:100%; height:100%;
+  object-fit:cover; object-position:center;
+}
+/* la section ne fait 300vh qu'à partir de 1024px : le sticky n'a de sens que là.
+   En dessous, la vidéo remplit simplement la hauteur de la section. */
+@media (min-width:1024px){
+  .apropos-fond video{ position:sticky; top:0; height:100svh }
+}
+.apropos-fond__voile{
+  position:absolute; inset:0;
+  background:rgba(0,0,0,.55);
+}
+
+/* ── Polaroid posé en bas à gauche de la section ───────────────────────────
+   Cadre blanc épais, marge plus large en bas pour la légende manuscrite,
+   léger dévers et ombre portée : la carte a l'air posée sur la page. */
+@font-face{
+  font-family:"Manuscrite";
+  src:url("fonts/script/caveat.woff2") format("woff2");
+  font-weight:400 700;    /* Caveat est variable : déclarer la plage, sinon
+                             le navigateur retombe sur la police système */
+  font-display:swap;
+}
+.polaroid{
+  position:absolute; z-index:3;
+  left:clamp(14px, 4vw, 70px);
+  bottom:clamp(24px, 6vh, 90px);
+  width:clamp(150px, 19vw, 268px);
+  margin:0; padding:clamp(9px,1.1vw,15px) clamp(9px,1.1vw,15px) 0;
+  background:#fdfcfa;
+  border-radius:3px;
+  box-shadow:0 26px 54px rgba(0,0,0,.42), 0 3px 10px rgba(0,0,0,.22);
+  transform:rotate(-5.5deg);
+  transition:transform .6s var(--ease-in-out);
+}
+.polaroid:hover{ transform:rotate(-2deg) scale(1.03) }
+.polaroid img{
+  display:block; width:100%; aspect-ratio:1/1;
+  object-fit:cover; object-position:center 28%;
+}
+.polaroid figcaption{
+  font-family:"Manuscrite", cursive;
+  color:#1d2642;
+  font-size:clamp(26px, 3.1vw, 44px);
+  line-height:1;
+  text-align:center;
+  padding:clamp(10px,1.3vw,18px) 0 clamp(14px,1.7vw,24px);
+}
+@media (prefers-reduced-motion: reduce){ .polaroid{ transition:none } }
+
+/* ── Bandeau défilant des rendez-vous ──────────────────────────────────────
+   Repris du principe de faithibiza.com : un mot manuscrit qui mord sur une
+   ligne de capitales défilantes, séparées par des étoiles. Chez eux le
+   défilement suit le scroll ; ici c'est une animation CSS continue, plus
+   simple et qui tourne sur le compositeur. */
+.bandeau{ padding:clamp(90px,14vh,170px) 0 clamp(70px,11vh,140px) }
+.bandeau__manuscrit{
+  font-family:"Anglaise", cursive;
+  color:#e01f1f;
+  font-size:clamp(30px, 7.6vw, 150px);
+  line-height:1.04;
+  margin:0 0 -.08em;          /* il mord juste sur la ligne du dessous, sans la noyer */
+  position:relative; z-index:2;
+}
+.bandeau__piste{ overflow:clip; width:100%; padding-block:.1em }
+.bandeau__defile{
+  display:inline-flex; align-items:center; width:max-content;
+  animation:bandeau-defile 38s linear infinite;
+  will-change:transform;
+}
+@keyframes bandeau-defile{ to{ transform:translate3d(-50%,0,0) } }
+.bandeau__piste:hover .bandeau__defile{ animation-play-state:paused }
+.bandeau__mot{
+  flex-shrink:0;
+  font-family:"Praise", Columbia, serif;
+  text-transform:uppercase;
+  color:var(--darkred);
+  font-size:clamp(44px, 9.5vw, 148px);
+  line-height:1.1; letter-spacing:.01em;
+  padding-right:clamp(26px, 3.4vw, 62px);
+}
+.bandeau__etoile{
+  flex-shrink:0; color:#e01f1f;
+  width:clamp(11px, 1.3vw, 22px); height:auto;
+  padding-right:clamp(26px, 3.4vw, 62px);
+  box-sizing:content-box;
+}
+.bandeau__cta{ margin-top:clamp(44px, 6vh, 86px) }
+@media (prefers-reduced-motion: reduce){
+  .bandeau__defile{ animation:none }
+  .bandeau__piste{ overflow-x:auto }
+}
+
+/* ── Les mots mis en relief dans les titres ────────────────────────────────
+   « images », « moment », « survit » : minuscules italiques au milieu des
+   capitales de Columbia. Playfair Display a un vrai italique dessiné — pas
+   une inclinaison calculée par le navigateur comme avec Overused. */
+@font-face{
+  font-family:"Playfair";
+  src:url("fonts/script/playfair-italic.woff2") format("woff2");
+  font-style:italic; font-weight:400 600; font-display:swap;
+}
+.mot-sans{
+  font-family:"Playfair", Georgia, serif;
+  font-style:italic;
+  font-weight:400;
+  text-transform:lowercase;
+  font-size:1.02em;     /* Playfair a une hauteur d'x plus basse que Columbia */
+  letter-spacing:0;
+}
+
+
+/* ── Section partenaire ────────────────────────────────────────────────────
+   Mise en page reprise de la section « dream team » de faithibiza : polaroid
+   incliné à gauche, logo et texte à droite. Le fond prend le bleu de marque de
+   TTFB, comme faithibiza prend le sien — c'est leur bloc, il porte leur couleur. */
+.ttfb-sec{ --ttfb:#020CBC; background:var(--ttfb); color:#fff; padding:clamp(80px,12vh,150px) 0 }
+.ttfb-sec__grille{ display:grid; gap:clamp(48px,6vw,90px); align-items:center }
+@media (min-width:900px){ .ttfb-sec__grille{ grid-template-columns:1fr 1fr } }
+
+.polaroid--ttfb{
+  position:static; width:min(100%, 430px); margin-inline:auto;
+  transform:rotate(-4deg);
+  box-shadow:0 34px 70px rgba(0,0,0,.34);
+}
+.polaroid--ttfb figcaption{ color:var(--ttfb) }
+
+.ttfb-sec__droite{ text-align:center }
+.ttfb-sec__label{
+  font-family:'Overused', sans-serif;
+  font-size:12px; letter-spacing:.2em; text-transform:uppercase;
+  opacity:.72; margin:0 0 clamp(22px,3vw,34px);
+}
+.ttfb-sec__logo{ display:block; margin:0 auto clamp(30px,4vw,48px); width:min(76%, 330px) }
+.ttfb-sec__logo img{ display:block; width:100%; height:auto }
+.ttfb-sec__texte p{
+  font-family:'Overused', sans-serif;
+  font-size:clamp(16px,1.35vw,20px); line-height:1.62;
+  max-width:46ch; margin:0 auto 1.1em;
+}
+.ttfb-sec__aecrire{ opacity:.6 }
+.ttfb-sec__lien{
+  display:inline-block; margin-top:clamp(14px,2vw,24px);
+  font-family:'Overused', sans-serif; font-size:14px; letter-spacing:.06em;
+  color:#fff; border-bottom:1px solid rgba(255,255,255,.5); padding-bottom:3px;
+  transition:border-color .4s var(--ease-in-out);
+}
+.ttfb-sec__lien:hover{ border-color:#fff }
+
+[data-hero]{ --bghero:#000 }
+
+[data-hero-images-wrapper]{
+  perspective: 1900px;
+  perspective-origin: 50% 48%;
+}
+.hero3d{
+  position:absolute; inset:0;
+  transform-style: preserve-3d;
+  pointer-events:none;              /* le bouton du titre reste cliquable */
+}
+
+/* ── un essaim ── */
+.hero3d__ring{
+  position:absolute; top:50%; left:50%;
+  width:0; height:0;
+  transform-style: preserve-3d;
+  animation: hero3d-spin var(--dur,58s) linear infinite;
+  animation-direction: var(--dir-name, normal);
+}
+.hero3d__ring[style*="--dir:-1"]{ animation-direction: reverse }
+@keyframes hero3d-spin{
+  from{ transform: rotateX(-6deg) rotateY(0deg) }
+  to  { transform: rotateX(-6deg) rotateY(-360deg) }
+}
+
+/* ── une carte ── */
+.hero3d__card{
+  --wbase: clamp(96px, 11.5vw, 178px);
+  --rbase: clamp(250px, 37vw, 545px);
+  --w: calc(var(--wbase) * var(--wm, 1));
+  --h: calc(var(--w) / var(--ar, 0.75));
+  position:absolute; margin:0;
+  width: var(--w); height: var(--h);
+  margin-left: calc(var(--w) / -2);
+  margin-top:  calc(var(--h) / -2);
+  transform: rotateY(var(--a)) translateZ(calc(var(--rbase) * var(--rm, 1)))
+             translateY(var(--y, 0)) rotate(var(--tilt, 0deg));
+  transform-style: preserve-3d;
+  overflow:hidden;
+  border-radius: clamp(10px, 1.4vw, 22px);
+  box-shadow: 0 30px 64px rgba(0,0,0,.65);
+}
+.hero3d__card img{ width:100%; height:100%; object-fit:cover; object-position:center; display:block }
+/* double face : sans ça, les cartes du fond montrent leur dos, donc l'image en miroir */
+.hero3d__card img{ position:absolute; inset:0; backface-visibility:hidden }
+.hero3d__card img.dos{ transform: rotateY(180deg) }
+
+/* le voile qui creuse la profondeur, en phase avec l'orbite */
+.hero3d__card::after{
+  content:""; position:absolute; inset:0; background:#000;
+  border-radius: inherit;
+  animation: hero3d-dim var(--dur-card, 58s) linear infinite;
+  animation-delay: var(--d);
+}
+.hero3d__ring[style*="--dur:58s"] .hero3d__card::after{ --dur-card:58s }
+.hero3d__ring[style*="--dur:84s"] .hero3d__card::after{ --dur-card:84s }
+@keyframes hero3d-dim{
+  0%, 100% { opacity:.03 }   /* devant le titre */
+  50%      { opacity:.66 }   /* derrière */
+}
+
+/* ── le titre, au centre du même espace 3D ── */
+.hero3d__center{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero3d__center .container{ pointer-events:auto }
+
+/* au survol, la galaxie se fige : on peut regarder une photo */
+[data-hero]:hover .hero3d__ring,
+[data-hero]:hover .hero3d__card::after{ animation-play-state: paused }
+
+@media (prefers-reduced-motion: reduce){
+  .hero3d__ring, .hero3d__card::after{ animation:none }
+  .hero3d__ring{ transform: rotateX(-6deg) }
+  .hero3d__card::after{ opacity:.4 }
+}
+</style>
+</head>
+<body class="home wp-singular page-template-default page page-id-2 wp-embed-responsive jpv-theme">
+</noscript><div id="page" style="--menu-color: var(--gray)"><div data-loader class="flex flex-wrap items-center justify-center fixed z-[999] top-0 left-0 w-full h-full">
+<svg data-loader-crest class="absolute z-[1] w-[73px] h-auto" width="215" height="254" viewBox="0 0 215 254" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path class="draw-me" d="M107.5 8 L204 39 V136 C204 197 158 227 107.5 246 C57 227 11 197 11 136 V39 Z" stroke="#DED9D7" stroke-width="5.4" stroke-miterlimit="2"/>
+<path class="draw-me" d="M107.5 27 L186 52 V134 C186 183 149 208 107.5 224 C66 208 29 183 29 134 V52 Z" stroke="#DED9D7" stroke-width="1.8" stroke-miterlimit="2" opacity=".55"/>
+<path class="m" d="M107.5 62 L119 107 L164 118.5 L119 130 L107.5 175 L96 130 L51 118.5 L96 107 Z" fill="#DED9D7"/>
+<path class="draw-me" d="M62 118.5 H80 M135 118.5 H153" stroke="#DED9D7" stroke-width="3" stroke-linecap="round"/>
+<path class="dot" d="M107.5 46.6c2.4 0 4.3-1.9 4.3-4.3s-1.9-4.3-4.3-4.3-4.3 1.9-4.3 4.3 1.9 4.3 4.3 4.3Z" fill="#DED9D7"/>
+<path class="dot" d="M107.5 199.4c2.4 0 4.3-1.9 4.3-4.3s-1.9-4.3-4.3-4.3-4.3 1.9-4.3 4.3 1.9 4.3 4.3 4.3Z" fill="#DED9D7"/>
+<path class="dot" d="M45.2 89.9c2.4 0 4.3-1.9 4.3-4.3s-1.9-4.3-4.3-4.3-4.3 1.9-4.3 4.3 1.9 4.3 4.3 4.3Z" fill="#DED9D7"/>
+<path class="dot" d="M169.8 89.9c2.4 0 4.3-1.9 4.3-4.3s-1.9-4.3-4.3-4.3-4.3 1.9-4.3 4.3 1.9 4.3 4.3 4.3Z" fill="#DED9D7"/>
+</svg>
+<a href="/" aria-label="JPV Squad"
+class="group absolute z-[1] w-[calc(100%_-_48px)] md:w-[calc(100%_-_80px)] h-auto bottom-[40px] overflow-hidden [&.animated]:duration-400 [&.animated]:ease-in-out lg:[&.animated]:[&.small]:!w-[120px] lg:[&.animated]:[&.small]:!top-[30px] [&.animated]:[&.hide]:not-[&.opened]:translate-y-[-100px] lg:[&.animated]:[&.hide]:translate-y-[-60px] !pointer-events-auto [&.opened]:**:[path]:!fill-[var(--darkred)] lg:[&.opened:not(.small)]:**:[path]:!fill-[var(--menu-color)]"
+style="--logo-color: var(--menu-color)" data-loader-logo>
+<svg class="w-full h-auto" width="1360" height="215" viewBox="0 0 1360 215" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path class="translate-y-[200%]" d="M93.07073954983923 192.87781350482314Q95.37513397642016 193.33869239013933 97.67952840300107 193.33869239013933Q106.43622722400858 193.33869239013933 112.19721329046088 188.2690246516613Q118.18863879957128 182.96891747052518 120.49303322615219 172.82958199356912Q122.79742765273312 162.69024651661306 122.79742765273312 140.10718113612003V91.71489817792067V53.69239013933547Q122.79742765273312 48.62272240085744 120.7234726688103 2.76527331189709Q129.2497320471597 3.6870310825294723 134.31939978563773 3.6870310825294723Q138.6977491961415 3.6870310825294723 146.76312968917472 2.76527331189709Q145.38049303322617 38.2529474812433 145.38049303322617 52.770632368703104V84.34083601286173V113.83708467309754L145.84137191854234 138.2636655948553V144.7159699892819V155.08574490889603Q145.84137191854234 182.0471596998928 123.02786709539122 195.87352625937834Q111.7363344051447 202.556270096463 96.52733118971062 204.16934619506966Q95.14469453376206 197.71704180064307 93.07073954983923 192.87781350482314Z" fill="#DED9D7" />
+<path class="translate-y-[200%]" d="M176.25937834941053 168.45123258306538Q177.18113612004288 151.39871382636656 177.64201500535907 142.87245444801715Q179.25509110396573 112.68488745980707 179.25509110396573 86.87566988210074Q179.25509110396573 70.05359056806002 178.56377277599142 52.770632368703104Q177.87245444801715 25.348338692390115 176.4898177920686 2.76527331189709Q185.4769560557342 3.4565916398713625 188.93354769560557 3.4565916398713625Q198.15112540192928 3.4565916398713625 208.9817792068596 2.5348338692390087Q218.1993569131833 1.8435155412647362 226.49517684887462 1.8435155412647362Q237.55627009646304 1.8435155412647362 243.77813504823152 3.1109324758842405Q250.0 4.378349410503745 257.37406216505894 8.295819935691298Q267.0525187566988 13.135048231511234 272.92872454448013 23.620042872454434Q278.8049303322615 34.10503751339763 278.8049303322615 46.318327974276514Q278.8049303322615 70.5144694533762 261.1763129689175 83.5342979635584Q243.54769560557344 96.55412647374061 211.05573419078243 96.55412647374061Q209.4426580921758 96.55412647374061 206.56216505894963 96.32368703108253Q203.6816720257235 96.09324758842443 201.14683815648448 96.09324758842443V104.84994640943194V118.21543408360128Q201.14683815648448 126.51125401929261 202.75991425509113 168.45123258306538Q196.76848874598073 167.99035369774919 189.85530546623795 167.99035369774919Q182.7116827438371 167.99035369774919 176.25937834941053 168.45123258306538ZM201.37727759914256 14.287245444801698 201.14683815648448 84.34083601286173Q208.52090032154342 85.2625937834941 212.438370846731 85.2625937834941Q232.02572347266883 85.2625937834941 242.7411575562701 75.23847802786709Q253.4565916398714 65.21436227224008 253.4565916398714 46.779206859592705Q253.4565916398714 17.97427652733117 228.56913183279744 14.517684887459808Q222.80814576634515 13.826366559485507 216.12540192926048 13.826366559485507Q215.66452304394429 13.826366559485507 201.37727759914256 14.287245444801698Z" fill="#DED9D7" />
+<path class="translate-y-[200%]" d="M274.19614147909965 2.5348338692390087Q284.7963558413719 3.226152197213281 289.40514469453376 3.226152197213281Q293.7834941050375 3.226152197213281 305.075026795284 2.5348338692390087Q313.6012861736334 30.41800643086816 321.89710610932474 53.001071811361186Q335.95391211146836 91.0235798499464 355.5412647374062 135.7288317256163Q375.3590568060021 91.0235798499464 388.95498392282957 53.001071811361186Q395.8681672025723 34.10503751339763 406.2379421221865 2.304394426580899Q410.38585209003213 2.9957127545552 415.45551982851015 2.9957127545552Q420.064308681672 2.9957127545552 424.44265809217575 2.5348338692390087Q411.7684887459807 29.95712754555197 401.62915326902464 53.001071811361186Q392.41157556270093 74.43193997856376 378.81564844587353 109.91961414790995Q373.5155412647374 123.51554126473741 357.1543408360128 168.45123258306538Q353.4673097534834 167.99035369774919 349.0889603429796 167.99035369774919Q344.71061093247584 167.99035369774919 341.0235798499464 168.45123258306538Q326.96677384780276 128.12433011789923 320.05359056806 109.91961414790995Q312.449088960343 89.41050375133976 297.00964630225076 53.001071811361186Q285.94855305466234 27.42229367631296 274.19614147909965 2.5348338692390087Z" fill="#DED9D7" />
+<path class="translate-y-[200%]" d="M490.57877813504825 159.69453376205786Q493.1136120042873 153.93354769560557 493.80493033226156 150.2465166130761Q494.49624866023584 147.94212218649517 496.33976420150054 139.87674169346195L497.9528403001072 138.7245444801715Q510.62700964630227 159.92497320471597 531.8274383708467 159.92497320471597Q546.3451232583066 159.92497320471597 556.0235798499464 150.59217577706323Q565.7020364415863 141.2593783494105 565.7020364415863 127.66345123258306Q565.7020364415863 107.15434083601286 546.1146838156485 98.62808145766344L523.3011789924974 88.48874598070739Q494.0353697749196 75.35369774919613 494.0353697749196 46.54876741693461Q494.0353697749196 26.270096463022497 509.59003215434086 13.135048231511249Q525.144694533762 0.0 549.1103965702036 0.0Q569.3890675241157 0.0 585.5198285101823 10.369774919614144Q582.293676312969 16.130760986066434 581.6023579849947 18.20471596998928Q579.5284030010719 22.583065380493025 577.9153269024652 28.113612004287234L575.6109324758843 28.344051446945315Q572.8456591639872 23.50482315112538 570.5412647374062 21.20042872454448Q560.6323687031082 10.830653804930307 545.4233654876742 10.830653804930307Q532.518756698821 10.830653804930307 524.1077170418007 18.89603429796354Q515.6966773847803 26.96141479099677 515.6966773847803 39.17470525187565Q515.6966773847803 56.68810289389067 535.9753483386924 66.59699892818863L556.0235798499464 76.2754555198285Q573.0760986066452 84.57127545551982 580.5653804930332 94.2497320471597Q588.0546623794212 103.92818863879957 588.0546623794212 118.21543408360128Q588.0546623794212 140.56806002143622 571.5782422293676 155.54662379421222Q555.101822079314 170.5251875669882 530.2143622722401 170.5251875669882Q508.55305466237945 170.5251875669882 490.57877813504825 159.69453376205786Z" fill="#DED9D7" />
+<path class="translate-y-[200%]" d="M720.096463022508 166.60771704180064Q733.4619506966774 176.05573419078243 741.0664523043945 180.66452304394426Q758.8102893890675 191.2647374062165 780.2411575562701 201.63451232583066L779.5498392282958 204.39978563772775L775.6323687031082 206.70418006430867L771.4844587352626 209.2390139335477Q769.6409431939978 210.39121114683815 766.5300107181135 212.23472668810288Q763.4190782422294 214.07824222936762 761.8060021436227 215.0Q741.9882100750268 201.63451232583066 726.5487674169347 190.80385852090032Q708.1136120042872 177.66881028938906 698.4351554126474 170.7556270096463H694.9785637727759Q655.3429796355841 170.7556270096463 630.9163987138263 147.7116827438371Q606.4898177920686 124.66773847802787 606.4898177920686 86.87566988210074Q606.4898177920686 48.62272240085744 630.5707395498392 24.31136120042872Q654.6516613076099 0.0 692.6741693461951 0.0Q731.6184351554126 0.0 756.6211146838157 24.080921757770625Q781.6237942122186 48.16184351554125 781.6237942122186 85.72347266881029Q781.6237942122186 111.30225080385851 769.8713826366559 130.88960342979635Q758.1189710610932 150.47695605573418 736.2272240085745 161.07717041800643Q728.8531618435155 164.53376205787782 720.096463022508 166.60771704180064ZM692.6741693461951 10.369774919614144Q663.4083601286173 10.369774919614144 647.2775991425509 30.648445873526256Q631.1468381564845 50.92711682743837 631.1468381564845 87.33654876741693Q631.1468381564845 122.36334405144694 647.3928188638799 141.95069667738477Q663.6387995712754 161.53804930332262 692.6741693461951 161.53804930332262Q722.400857449089 161.53804930332262 739.3381564844588 141.60503751339763Q756.2754555198285 121.67202572347267 756.2754555198285 86.41479099678456Q756.2754555198285 39.86602357984992 730.4662379421222 21.891747052518753Q713.6441586280814 10.369774919614144 692.6741693461951 10.369774919614144Z" fill="#DED9D7" />
+<path class="translate-y-[200%]" d="M804.898177920686 2.5348338692390087Q813.1939978563773 3.4565916398713625 818.2636655948553 3.4565916398713625Q823.1028938906752 3.4565916398713625 831.3987138263666 2.5348338692390087Q829.3247588424438 34.796355841371906 829.3247588424438 52.54019292604501V64.29260450160771V88.48874598070739Q829.3247588424438 117.06323687031082 830.7073954983923 124.43729903536976Q833.2422293676314 139.41586280814576 846.6077170418007 148.86387995712755Q859.97320471597 158.3118971061093 878.6387995712755 158.3118971061093Q895.4608788853162 158.3118971061093 908.3654876741693 149.67041800643085Q921.2700964630226 141.02893890675242 927.0310825294748 125.81993569131832Q931.6398713826367 113.37620578778134 931.6398713826367 85.2625937834941V64.06216505894962V56.45766345123258V52.30975348338691Q931.6398713826367 37.792068595927105 930.2572347266881 2.5348338692390087Q933.4833869239014 2.9957127545552 937.1704180064309 2.9957127545552Q941.0878885316184 2.9957127545552 944.5444801714898 2.5348338692390087Q943.1618435155412 38.2529474812433 943.1618435155412 52.54019292604501V60.60557341907824V63.83172561629152V82.2668810289389V84.34083601286173Q943.1618435155412 102.7759914255091 942.9314040728832 106.92390139335475Q941.7792068595927 134.80707395498393 922.422293676313 152.78135048231513Q903.0653804930332 170.7556270096463 874.0300107181137 170.7556270096463Q846.3772775991425 170.7556270096463 826.0986066452303 154.2792068595927Q805.8199356913183 137.8027867095391 806.0503751339764 115.45016077170418L806.5112540192927 82.95819935691317V64.29260450160771V52.54019292604501Q806.5112540192927 37.10075026795283 804.898177920686 2.5348338692390087Z" fill="#DED9D7" />
+<path class="translate-y-[200%]" d="M953.0707395498392 168.45123258306538Q959.5230439442659 157.15969989281885 963.4405144694534 149.09431939978563Q970.5841371918542 134.57663451232582 992.9367631296892 85.95391211146837Q1018.5155412647374 29.72668810289389 1025.8896034297964 12.443729903536962L1030.037513397642 2.5348338692390087Q1035.7984994640942 3.4565916398713625 1039.2550911039657 3.4565916398713625Q1042.481243301179 3.4565916398713625 1048.0117899249733 2.5348338692390087L1050.7770632368704 12.21329046087888Q1057.9206859592712 37.10075026795283 1075.4340836012861 85.72347266881029Q1087.186495176849 118.44587352625936 1098.9389067524116 145.63772775991424Q1103.3172561629153 155.7770632368703 1109.539121114684 168.45123258306538Q1102.395498392283 167.99035369774919 1094.3301178992497 167.99035369774919Q1086.4951768488745 167.99035369774919 1079.1211146838157 168.45123258306538Q1073.5905680600215 150.47695605573418 1070.8252947481244 141.4898177920686Q1067.599142550911 131.35048231511254 1059.3033226152197 108.30653804930331Q1045.016077170418 107.84565916398714 1029.5766345123259 107.84565916398714Q1011.8327974276527 107.84565916398714 996.6237942122186 108.30653804930331Q989.7106109324759 123.51554126473741 981.6452304394427 143.33333333333331Q976.5755627009646 155.7770632368703 971.9667738478028 168.45123258306538Q967.5884244372991 167.99035369774919 962.518756698821 167.99035369774919Q957.6795284030011 167.99035369774919 953.0707395498392 168.45123258306538ZM1055.3858520900321 95.63236870310824 1031.4201500535905 29.95712754555197 1001.9239013933548 95.63236870310824Q1014.5980707395498 96.09324758842443 1028.8853161843515 96.09324758842443Q1042.481243301179 96.09324758842443 1055.3858520900321 95.63236870310824Z" fill="#DED9D7" />
+<path class="translate-y-[200%]" d="M1119.6784565916398 2.76527331189709Q1128.8960342979635 3.6870310825294723 1133.5048231511255 3.6870310825294723Q1136.2700964630226 3.6870310825294723 1157.0096463022508 2.76527331189709Q1164.1532690246518 2.304394426580899 1176.1361200428726 2.304394426580899Q1219.9196141479101 2.304394426580899 1243.4244372990356 22.813504823151106Q1266.9292604501609 43.322615219721314 1266.9292604501609 81.57556270096462Q1266.9292604501609 120.05894962486602 1241.6961414790999 144.37031082529472Q1216.4630225080386 168.68167202572346 1176.1361200428726 168.68167202572346Q1171.5273311897106 168.68167202572346 1155.3965702036442 168.2207931404073Q1140.1875669882102 167.7599142550911 1137.1918542336548 167.7599142550911Q1131.6613076098606 167.7599142550911 1119.6784565916398 168.45123258306538Q1119.908896034298 162.2293676312969 1120.2545551982853 154.04876741693462Q1120.6002143622723 145.86816720257235 1120.6002143622723 143.7942122186495Q1121.9828510182208 106.46302250803858 1121.9828510182208 83.18863879957127Q1121.9828510182208 73.04930332261522 1121.5219721329047 52.770632368703104Q1120.6002143622723 23.96570203644157 1119.6784565916398 2.76527331189709ZM1169.914255091104 14.056806002143617Q1157.0096463022508 14.056806002143617 1144.5659163987139 15.20900321543408L1144.3354769560558 51.387995712754545V87.33654876741693V121.67202572347267L1144.5659163987139 156.0075026795284Q1163.4619506966774 157.85101822079315 1171.988210075027 157.85101822079315Q1196.1843515541266 157.85101822079315 1211.3933547695606 148.17256162915328Q1225.6806002143624 139.41586280814576 1233.6307609860664 122.59378349410503Q1241.5809217577707 105.7717041800643 1241.5809217577707 84.34083601286173Q1241.5809217577707 60.375133976420145 1232.9394426580923 44.01393354769559Q1224.2979635584138 27.652733118971042 1208.1672025723474 20.73954983922829Q1192.727759914255 14.056806002143617 1169.914255091104 14.056806002143617Z" fill="#DED9D7" />
+</svg>
+</a><div data-loader-background class="absolute w-full h-full bg-[var(--darkred)]"></div></div><header
+class="group header flex flex-wrap items-center justify-end fixed z-[888] top-0 left-0 w-full p-[24px] md:p-[50px] duration-400 ease-in-out [&.opened]:bg-[var(--gray)] lg:[&.opened]:bg-[transparent] lg:[&.small]:py-[25px] [&.small]:not-[&.opened]:bg-[var(--gray)] [&.hide]:not-[&.opened]:translate-y-[-101%]"
+data-header><div class="flex flex-wrap items-center justify-end gap-x-[18px]" data-menu><nav
+class="flex min-h-[calc(100vh_-_72px)] md:min-h-[calc(100vh_-_124px)] lg:min-h-0 flex-col lg:flex-row flex-wrap items-center justify-start lg:justify-end gap-[12px] md:gap-[20px] lg:gap-[18px] px-[24px] lg:px-0 py-[32px] md:py-[48px] lg:py-0 absolute lg:relative top-[72px] md:top-[124px] duration-400 ease-in-out lg:top-auto left-0 w-full lg:w-auto pointer-events-none group-[&.opened]:pointer-events-auto group-[&.opened]:bg-[var(--gray)] lg:group-[&.opened]:bg-[transparent]">
+<span
+class="block lg:hidden w-full h-[1px] bg-[var(--darkred)] absolute top-0 left-0 scale-x-0 origin-left duration-400 ease-in-out group-[&.opened]:scale-x-100"></span><div
+class="opacity-0 translate-y-[15px] transition-all pointer-events-none duration-400 ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:pointer-events-auto">
+<a class="md:text-[24px] lg:text-[16px] text-[var(--menu-color)] duration-400 ease-in-out lg:hover:opacity-50 group-[&.small]:not-[&.opened]:text-[var(--darkred)] group-[&.opened]:text-[var(--darkred)] lg:group-[&.opened]:text-[var(--menu-color)]"
+data-menu-link href="#a-propos"
+target="">La Squad</a></div><div
+class="opacity-0 translate-y-[15px] transition-all pointer-events-none duration-400 ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:pointer-events-auto">
+<a class="md:text-[24px] lg:text-[16px] text-[var(--menu-color)] duration-400 ease-in-out lg:hover:opacity-50 group-[&.small]:not-[&.opened]:text-[var(--darkred)] group-[&.opened]:text-[var(--darkred)] lg:group-[&.opened]:text-[var(--menu-color)]"
+data-menu-link href="#services"
+target="">Le Gala</a></div><div
+class="opacity-0 translate-y-[15px] transition-all pointer-events-none duration-400 ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:pointer-events-auto">
+<a class="md:text-[24px] lg:text-[16px] text-[var(--menu-color)] duration-400 ease-in-out lg:hover:opacity-50 group-[&.small]:not-[&.opened]:text-[var(--darkred)] group-[&.opened]:text-[var(--darkred)] lg:group-[&.opened]:text-[var(--menu-color)]"
+data-menu-link href="#realisations"
+target="">En images</a></div></nav>
+<button
+class="text-[var(--menu-color)] cursor-pointer duration-300 ease-in-out lg:hover:opacity-50 group-[.small:not(.opened)]:text-[var(--darkred)] group-[&.opened]:text-[var(--darkred)] lg:group-[&.opened:not(.small)]:text-[var(--menu-color)]"
+data-menu-button>
+Menu        </button></div></header><div class="group flex fixed top-0 left-0 w-full h-screen overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-[999] duration-200 ease-in-out delay-[0.7s] [&.opened]:bg-[var(--darkred)] pointer-events-none [&.opened]:pointer-events-auto [&.opened]:delay-[0.1s]"
+data-form-modal data-lenis-prevent>
+<svg class="fixed top-[30px] right-[30px] cursor-pointer z-[3] opacity-0 duration-500 delay-[0.3s] ease-in-out group-[.opened]:opacity-100 group-[.opened]:delay-[0.4s]"
+data-form-close width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path
+d="M2.36873 0.000654222C5.53076 4.05372 10.4472 9.34932 13.3026 12.317L13.9117 12.944C16.6249 10.1517 22.0564 4.3585 25.4567 -3.6312e-05L27.826 2.36919C23.7728 5.5313 18.4774 10.449 15.5096 13.3045L14.8812 13.9135C17.6741 16.6273 23.4669 22.0568 27.8246 25.4565L25.4554 27.8257C22.0556 23.4679 16.626 17.6753 13.9124 14.8824C11.1985 17.6755 5.76899 23.4681 2.36942 27.8257L1.1672 26.6235L1.16789 26.6228L0.00158015 25.4565C4.05468 22.2944 9.34959 17.3773 12.3173 14.5219L12.9436 13.9135L12.3159 13.3038C9.34804 10.4482 4.05317 5.5311 0.000199081 2.36919L2.36873 0.000654222Z"
+fill="#D9D9D9" />
+</svg><div class="w-full h-[calc(100vh_+_200px)] fixed top-[-100px] z-[2] pointer-events-none">
+<svg class="absolute left-[-24.75%] md:left-0 top-0 w-[50%] h-full translate-x-[200vw] md:translate-x-[220%] rotate-[-5deg] duration-600 ease-in-out delay-[0.5s] group-[.opened]:translate-x-0 group-[.opened]:w-[8.25%] group-[.opened]:rotate-0 group-[.opened]:delay-[0s] transform-gpu will-change-transform"
+viewBox="0 0 123 985" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M122.908 -0.09375H-0.67749V985.287H122.908V-0.09375Z" fill="url(#paint0_linear_2150_2215)" />
+<defs>
+<linearGradient id="paint0_linear_2150_2215" x1="-0.67749" y1="492.6" x2="122.912" y2="492.6"
+gradientUnits="userSpaceOnUse">
+<stop offset="0.37" stop-color="#4c181a" />
+<stop offset="1" stop-color="#DF5616" />
+</linearGradient>
+</defs>
+</svg>
+<svg class="absolute left-[-16.5%] md:left-[8.25%] top-0 w-[50%] h-full translate-x-[200vw] md:translate-x-[220%] rotate-[-5deg] duration-600 ease-in-out delay-[0.4s] group-[.opened]:translate-x-0 group-[.opened]:w-[8.25%] group-[.opened]:rotate-0 group-[.opened]:delay-[0.1s] transform-gpu will-change-transform"
+viewBox="0 0 123 985" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M122.908 -0.09375H-0.67749V985.287H122.908V-0.09375Z" fill="url(#paint0_linear_2150_2216)" />
+<defs>
+<linearGradient id="paint0_linear_2150_2216" x1="-0.67749" y1="492.6" x2="122.912" y2="492.6"
+gradientUnits="userSpaceOnUse">
+<stop offset="0.37" stop-color="#4c181a" />
+<stop offset="1" stop-color="#DF5616" />
+</linearGradient>
+</defs>
+</svg>
+<svg class="absolute left-[-8.25%] md:left-[16.5%] top-0 w-[50%] h-full translate-x-[200vw] md:translate-x-[220%] rotate-[-5deg] duration-600 ease-in-out delay-[0.3s] group-[.opened]:translate-x-0 group-[.opened]:w-[8.25%] group-[.opened]:rotate-0 group-[.opened]:delay-[0.2s] transform-gpu will-change-transform"
+viewBox="0 0 123 985" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M122.908 -0.09375H-0.67749V985.287H122.908V-0.09375Z" fill="url(#paint0_linear_2150_2217)" />
+<defs>
+<linearGradient id="paint0_linear_2150_2217" x1="-0.67749" y1="492.6" x2="122.912" y2="492.6"
+gradientUnits="userSpaceOnUse">
+<stop offset="0.37" stop-color="#4c181a" />
+<stop offset="1" stop-color="#DF5616" />
+</linearGradient>
+</defs>
+</svg>
+<svg class="hidden lg:block absolute left-[24.75%] top-0 w-[50%] h-full translate-x-[220%] rotate-[-5deg] duration-600 ease-in-out delay-[0.2s] group-[.opened]:translate-x-0 group-[.opened]:w-[8.25%] group-[.opened]:rotate-0 group-[.opened]:delay-[0.3s] transform-gpu will-change-transform"
+viewBox="0 0 123 985" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M122.908 -0.09375H-0.67749V985.287H122.908V-0.09375Z" fill="url(#paint0_linear_2150_2218)" />
+<defs>
+<linearGradient id="paint0_linear_2150_2218" x1="-0.67749" y1="492.6" x2="122.912" y2="492.6"
+gradientUnits="userSpaceOnUse">
+<stop offset="0.37" stop-color="#4c181a" />
+<stop offset="1" stop-color="#DF5616" />
+</linearGradient>
+</defs>
+</svg></div><div
+class="w-full md:w-[75.25%] lg:w-[67%] md:ml-[24.5%] lg:ml-[33%] px-[24px] md:px-[8.3333%] lg:px-[12.5%] pt-[80px] lg:pt-[120px] h-auto relative z-[1]"><div class="w-full"><h3
+class="w-[75%] lg:w-1/2 text-[var(--gray)] text-[24px] md:text-[36px] lg:text-[48px] font-['Overused'] normal-case mb-[64px] lg:mb-[96px] opacity-0 translate-y-[15px] duration-400 delay-[0.1s] ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:delay-[0.6s]">
+Réserver ma place</h3><div
+class="pb-[120px] opacity-0 translate-y-[15px] duration-400 ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:delay-[0.7s]"><div class="grid grid-cols-1 gap-[64px]"><div class="billetterie">
+  <p class="billetterie__intro">Samedi 14 novembre 2026, à partir de 18h00 — Gembloux.
+  L’intégralité des bénéfices est versée à la construction du nouveau temple de La Pierre Vivante.
+  Chaque place doit être associée à un nom et un prénom.</p>
+  <div class="billetterie__cadre">
+    <div class="billetterie__attente" data-billet-attente>Chargement de la billetterie…</div>
+    <iframe
+      data-billet-src="https://www.billetweb.fr/gala-jpv-heritage"
+      title="Billetterie — Gala JPV Héritage"
+      allow="payment"
+      referrerpolicy="origin"></iframe>
+  </div>
+  <p class="billetterie__repli">La billetterie ne s’affiche pas&nbsp;?
+    <a href="https://www.billetweb.fr/gala-jpv-heritage" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
+  </p>
+</div></div>  </div></div></div></div><div id="content"><main id="main"><section id=""
+class="h-[100svh] w-full flex flex-wrap items-center justify-center bg-[var(--bghero)] will-change-[background-color] relative z-[1] overflow-hidden"
+data-hero><div class="absolute w-full h-full flex flex-wrap items-center justify-center"
+data-hero-images-wrapper><div class="hero3d"><div class="hero3d__ring" style="--dur:58s;--dir:1"><figure class="hero3d__card" style="--a:346.6deg;--rm:1.094;--wm:0.859;--y:-7.1vh;--tilt:-1.0deg;--ar:1.7778;--d:-2.17s"><img src="img/jpv-eveil.jpg" alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-eveil.jpg" data-alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:60.6deg;--rm:0.74;--wm:1.229;--y:14.0vh;--tilt:-8.8deg;--ar:0.7500;--d:-48.23s"><img src="img/ring-4.svg" alt="Cadre photo — Gala Héritage" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/ring-4.svg" data-alt="Cadre photo — Gala Héritage" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:129.3deg;--rm:0.809;--wm:1.296;--y:-15.0vh;--tilt:0.2deg;--ar:0.7500;--d:-37.17s"><img src="img/jpv-reunion.jpg" alt="La jeunesse de la JPV en louange" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-reunion.jpg" data-alt="La jeunesse de la JPV en louange" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:172.8deg;--rm:0.861;--wm:1.18;--y:8.5vh;--tilt:6.1deg;--ar:1.5000;--d:-30.15s"><img src="img/ring-6.svg" alt="Cadre photo — Été JPV" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/ring-6.svg" data-alt="Cadre photo — Été JPV" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:229.8deg;--rm:0.804;--wm:1.043;--y:-21.5vh;--tilt:-10.4deg;--ar:1.7772;--d:-20.97s"><img src="img/jpv-louange.jpg" alt="La chorale de la JPV — « Je suis de ta maison »" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-louange.jpg" data-alt="La chorale de la JPV — « Je suis de ta maison »" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:312.3deg;--rm:1.186;--wm:1.146;--y:-8.2vh;--tilt:8.6deg;--ar:0.5611;--d:-7.69s"><img src="img/jpv-mon-corps-ton-temple.jpg" alt="Mon corps ton temple — 31 octobre" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-mon-corps-ton-temple.jpg" data-alt="Mon corps ton temple — 31 octobre" loading="eager" decoding="async"></figure></div><div class="hero3d__ring" style="--dur:84s;--dir:-1"><figure class="hero3d__card" style="--a:352.9deg;--rm:0.812;--wm:1.085;--y:-20.1vh;--tilt:-1.4deg;--ar:1.0000;--d:-82.35s"><img src="img/jpv-ciel.jpg" alt="Ciel — vision Starlight" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-ciel.jpg" data-alt="Ciel — vision Starlight" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:79.1deg;--rm:0.855;--wm:1.295;--y:-17.7vh;--tilt:5.0deg;--ar:1.0000;--d:-18.46s"><img src="img/jpv-music-genesis.jpg" alt="JPV Music — Genesis" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-music-genesis.jpg" data-alt="JPV Music — Genesis" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:147.3deg;--rm:1.243;--wm:1.045;--y:13.3vh;--tilt:5.7deg;--ar:1.7772;--d:-34.37s"><img src="img/jpv-podcast.jpg" alt="Le podcast de la JPV Squad" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-podcast.jpg" data-alt="Le podcast de la JPV Squad" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:222.1deg;--rm:1.05;--wm:0.943;--y:-25.7vh;--tilt:-6.7deg;--ar:1.0000;--d:-51.82s"><img src="img/ring-8.svg" alt="Cadre photo — Réunion JPV" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/ring-8.svg" data-alt="Cadre photo — Réunion JPV" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:273.3deg;--rm:1.226;--wm:1.096;--y:-26.3vh;--tilt:-10.0deg;--ar:1.0000;--d:-63.76s"><img src="img/ring-11.svg" alt="Cadre photo — Gembloux" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/ring-11.svg" data-alt="Cadre photo — Gembloux" loading="eager" decoding="async"></figure></div><div class="hero3d__center"><div class="container relative z-[1] translate-y-[1.5em]" data-animate-section="2.7"><div class="titre"><h1 class="text-[var(--gray)] text-center text-[13vw] md:text-[72px] lg:text-[120px] mb-[36px] lg:mb-[60px]"
+data-animate-element="split"><span class="praise">Héritage</span></h1><span class="gala">Gala</span></div><div data-animate-element="fade">
+<a class="button button-gray btn-gala btn-gala--hero" href="#formulaire" target="">Réserver ma place</a></div></div></div></div></div></div></div></section><section id="a-propos"
+class="lg:h-[300vh] w-full flex flex-wrap items-start justify-center bg-[var(--bghero)] will-change-[background-color] relative py-[120px] lg:py-0"
+data-about-image-wrapper data-about><div class="apropos-noir" aria-hidden="true"></div><div class="apropos-fond" aria-hidden="true">
+<video muted loop playsinline preload="none" poster="img/jpv-fond-poster.jpg" data-fond-video>
+<source src="img/jpv-fond.mp4" type="video/mp4">
+</video>
+<span class="apropos-fond__voile"></span>
+</div><figure class="polaroid">
+<img src="img/jpv-reunion.jpg" alt="La jeunesse de la JPV, 2025" loading="lazy" decoding="async">
+<figcaption>2025</figcaption>
+</figure><div class="group lg:h-screen w-full flex flex-wrap items-center justify-center lg:sticky top-0 left z-[2] lg:overflow-hidden"
+data-about-button-wrapper><div class="flex flex-col lg:flex-row flex-wrap items-center justify-center lg:relative"
+data-about-content-wrapper data-animate-section><h2 class="text-[var(--gray)] text-center text-[6vw] sm:text-[36px] lg:text-[52px] px-[24px] sm:px-[48px] lg:w-full max-w-[1400px]"
+data-animate-element="split">
+Nous croyons qu’une soirée réussie dépasse la simple célébration. Elle devient le <span class="mot-sans">moment</span> où une génération se rassemble, donne, et laisse une trace qui lui <span class="mot-sans">survit</span>.</h2><div class="md:absolute md:bottom-[48px] md:right-[48px] w-[120px] h-auto my-[48px] md:my-0 flex lg:hidden flex-wrap items-center justify-center origin-center cursor-pointer"
+data-animate-element="fade" data-about-button-wrapper-mobile>
+<span class="text-[14px] text-[var(--gray)] absolute z-[1]">En savoir plus</span>
+<svg class="w-full h-auto" width="151" height="151" viewBox="0 0 151 151" fill="none"
+xmlns="http://www.w3.org/2000/svg">
+<path
+d="M75.5 151C117.197 151 151 117.197 151 75.5C151 33.8025 117.197 0 75.5 0C33.8025 0 0 33.8025 0 75.5C0 117.197 33.8025 151 75.5 151Z"
+fill="url(#paint0_radial_2120_311)" />
+<defs>
+<radialGradient id="paint0_radial_2120_311" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+gradientTransform="translate(75.5 75.5) rotate(90) scale(75.5)">
+<stop stop-color="#1D2642" />
+<stop offset="0.42" stop-color="#232E51" />
+<stop offset="0.57" stop-color="#253053" />
+<stop offset="0.67" stop-color="#2D3A5C" />
+<stop offset="0.77" stop-color="#3B496B" />
+<stop offset="0.85" stop-color="#4F6080" />
+<stop offset="0.93" stop-color="#687C9B" />
+<stop offset="1" stop-color="#849BB9" />
+</radialGradient>
+</defs>
+</svg></div><div class="lg:absolute overflow-hidden lg:scale-0 mx-[24px] lg:mx-0 md:mt-[64px] lg:mt-0 lg:!translate-y-0 lg:!opacity-100"
+data-animate-element="fade" data-about-image-div>
+<picture>
+<source media="(min-width: 768px)">
+<img data-about-image class="w-full max-w-[370px] lg:scale-[1.4]" src="img/jpv-reunion.jpg"
+alt="La jeunesse de la Pierre Vivante, à Gembloux" loading="eager" decoding="async"><noscript><img data-about-image class="w-full max-w-[370px] lg:scale-[1.4]"
+src="img/jpv-reunion.jpg"
+alt="La jeunesse de la Pierre Vivante, à Gembloux" loading="eager" decoding="async"></noscript>
+</picture></div></div><div class="hidden lg:block absolute top-[-75px] left-[-75px] z-[2] pointer-events-none" data-about-button><div
+class="w-[150px] h-auto flex flex-wrap items-center justify-center origin-center scale-0 duration-300 ease-in-out lg:group-[.hover]:scale-100">
+<span class="text-[16px] text-[var(--gray)] absolute z-[1]">En savoir plus</span>
+<svg width="151" height="151" viewBox="0 0 151 151" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path
+d="M75.5 151C117.197 151 151 117.197 151 75.5C151 33.8025 117.197 0 75.5 0C33.8025 0 0 33.8025 0 75.5C0 117.197 33.8025 151 75.5 151Z"
+fill="url(#paint0_radial_2120_312)" />
+<defs>
+<radialGradient id="paint0_radial_2120_312" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+gradientTransform="translate(75.5 75.5) rotate(90) scale(75.5)">
+<stop stop-color="#1D2642" />
+<stop offset="0.42" stop-color="#232E51" />
+<stop offset="0.57" stop-color="#253053" />
+<stop offset="0.67" stop-color="#2D3A5C" />
+<stop offset="0.77" stop-color="#3B496B" />
+<stop offset="0.85" stop-color="#4F6080" />
+<stop offset="0.93" stop-color="#687C9B" />
+<stop offset="1" stop-color="#849BB9" />
+</radialGradient>
+</defs>
+</svg></div></div></div>
+<svg class="w-full h-auto object-cover object-center absolute bottom-0" width="1440" height="1475"
+viewBox="0 0 1440 1475" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2120_169)">
+<path opacity="0.1" fill-rule="evenodd" clip-rule="evenodd"
+d="M0 -61.6954C92.2008 440.513 624.183 420.804 719.688 1251.52C815.411 418.993 1349.5 440.602 1439.98 -65H1440V573.231C1211.33 641.034 804.894 911.248 771.136 1485C746.293 1479.33 691.224 1479.23 668.25 1485C666.054 1094.92 276.513 710.955 37.2404 593.602C25.1502 587.438 12.7334 581.472 0 575.714L0 -61.6954Z"
+fill="#849BB9" />
+</g>
+</svg></section><div class="group flex fixed top-0 left-0 w-full h-screen overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-[999] duration-200 ease-in-out delay-[0.7s] [&.opened]:bg-[var(--marine)] pointer-events-none [&.opened]:pointer-events-auto [&.opened]:delay-[0.1s]"
+data-about-modal data-lenis-prevent>
+<svg class="fixed top-[30px] right-[30px] cursor-pointer z-[3] opacity-0 duration-500 delay-[0.3s] ease-in-out group-[.opened]:opacity-100 group-[.opened]:delay-[0.4s]"
+data-about-close width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path
+d="M2.36873 0.000654222C5.53076 4.05372 10.4472 9.34932 13.3026 12.317L13.9117 12.944C16.6249 10.1517 22.0564 4.3585 25.4567 -3.6312e-05L27.826 2.36919C23.7728 5.5313 18.4774 10.449 15.5096 13.3045L14.8812 13.9135C17.6741 16.6273 23.4669 22.0568 27.8246 25.4565L25.4554 27.8257C22.0556 23.4679 16.626 17.6753 13.9124 14.8824C11.1985 17.6755 5.76899 23.4681 2.36942 27.8257L1.1672 26.6235L1.16789 26.6228L0.00158015 25.4565C4.05468 22.2944 9.34959 17.3773 12.3173 14.5219L12.9436 13.9135L12.3159 13.3038C9.34804 10.4482 4.05317 5.5311 0.000199081 2.36919L2.36873 0.000654222Z"
+fill="#D9D9D9" />
+</svg><div class="w-full h-[calc(100dvh_+_200px)] fixed top-[-100px] z-[2] pointer-events-none">
+<svg class="absolute left-[-24.75%] md:left-0 top-0 w-[50%] h-full translate-x-[200vw] md:translate-x-[220%] rotate-[-5deg] duration-600 ease-in-out delay-[0.6s] group-[.opened]:translate-x-0 group-[.opened]:w-[8.25%] group-[.opened]:rotate-0 group-[.opened]:delay-[0s] transform-gpu will-change-transform"
+viewBox="0 0 123 985" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M122.908 -0.09375H-0.67749V985.287H122.908V-0.09375Z" fill="url(#paint0_linear_2150_2211)" />
+<defs>
+<linearGradient id="paint0_linear_2150_2211" x1="-0.67749" y1="492.6" x2="122.912" y2="492.6"
+gradientUnits="userSpaceOnUse">
+<stop offset="0.37" stop-color="#232E51" />
+<stop offset="1" stop-color="#849BB9" />
+</linearGradient>
+</defs>
+</svg>
+<svg class="absolute left-[-16.5%] md:left-[8.25%] top-0 w-[50%] h-full translate-x-[200vw] md:translate-x-[220%] rotate-[-5deg] duration-600 ease-in-out delay-[0.5s] group-[.opened]:translate-x-0 group-[.opened]:w-[8.25%] group-[.opened]:rotate-0 group-[.opened]:delay-[0.1s] transform-gpu will-change-transform"
+viewBox="0 0 123 985" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M122.908 -0.09375H-0.67749V985.287H122.908V-0.09375Z" fill="url(#paint0_linear_2150_222)" />
+<defs>
+<linearGradient id="paint0_linear_2150_222" x1="-0.67749" y1="492.6" x2="122.912" y2="492.6"
+gradientUnits="userSpaceOnUse">
+<stop offset="0.37" stop-color="#232E51" />
+<stop offset="1" stop-color="#849BB9" />
+</linearGradient>
+</defs>
+</svg>
+<svg class="absolute left-[-8.25%] md:left-[16.5%] top-0 w-[50%] h-full translate-x-[200vw] md:translate-x-[220%] rotate-[-5deg] duration-600 ease-in-out delay-[0.4s] group-[.opened]:translate-x-0 group-[.opened]:w-[8.25%] group-[.opened]:rotate-0 group-[.opened]:delay-[0.2s] transform-gpu will-change-transform"
+viewBox="0 0 123 985" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M122.908 -0.09375H-0.67749V985.287H122.908V-0.09375Z" fill="url(#paint0_linear_2150_223)" />
+<defs>
+<linearGradient id="paint0_linear_2150_223" x1="-0.67749" y1="492.6" x2="122.912" y2="492.6"
+gradientUnits="userSpaceOnUse">
+<stop offset="0.37" stop-color="#232E51" />
+<stop offset="1" stop-color="#849BB9" />
+</linearGradient>
+</defs>
+</svg>
+<svg class="hidden md:block absolute left-[24.75%] top-0 w-[50%] h-full translate-x-[200vw] md:translate-x-[220%] rotate-[-5deg] duration-600 ease-in-out delay-[0.3s] group-[.opened]:translate-x-0 group-[.opened]:w-[8.25%] group-[.opened]:rotate-0 group-[.opened]:delay-[0.3s] transform-gpu will-change-transform"
+viewBox="0 0 123 985" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M122.908 -0.09375H-0.67749V985.287H122.908V-0.09375Z" fill="url(#paint0_linear_2150_224)" />
+<defs>
+<linearGradient id="paint0_linear_2150_224" x1="-0.67749" y1="492.6" x2="122.912" y2="492.6"
+gradientUnits="userSpaceOnUse">
+<stop offset="0.37" stop-color="#232E51" />
+<stop offset="1" stop-color="#849BB9" />
+</linearGradient>
+</defs>
+</svg></div><div class="w-full md:w-[67%] md:ml-[33%] h-auto relative z-[1]"><div
+class="w-full min-h-[50dvh] flex flex-col flex-wrap items-start justify-end p-[80px_24px_60px_24px] md:p-[120px_80px_80px_80px]"><h3
+class="text-[var(--gray)] text-[24px] md:text-[36px] lg:text-[42px] font-['Overused'] normal-case mb-[32px] opacity-0 translate-y-[15px] duration-400 delay-[0.1s] ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:delay-[0.6s]">
+La JPV</h3><div
+class="text-[16px] text-[var(--gray)] lg:columns-2 lg:[&>p]:break-inside-avoid lg:gap-[26px] [&>p]:mb-[1em] opacity-0 translate-y-[15px] duration-400 delay-[0.05s] ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:delay-[0.65s]"><p>À l’origine du Gala Héritage se trouve la JPV — Jeunesse de la Pierre Vivante — la jeunesse de l’église La Pierre Vivante, à Gembloux. Une communauté de jeunes qui se rassemble pour grandir, servir et célébrer.</p><p>Trois mots la résument : Enseignée, Épanouie, Engagée. C’est la vision STARLIGHT — une jeunesse qui connaît ce qu’elle croit, qui déploie ce qu’elle a reçu, et qui s’engage pour sa ville et sa génération.</p><p>1 Pierre 2:5 — le verset qui donne son nom à l’église : des pierres vivantes, édifiées ensemble en une maison spirituelle. Le Gala Héritage en est la traduction la plus concrète : une maison que l’on bâtit vraiment.</p></div></div><div
+class="w-full h-[40dvh] md:h-[50dvh] overflow-hidden flex flex-wrap items-center justify-start relative opacity-0 delay-[0.7s] group-[&.opened]:opacity-100 group-[.opened]:delay-[0s]"><h4 class="absolute z-[3] left-[-0.15em] md:left-[-20px] text-[15vw] md:text-[100px] text-[var(--gray)] leading-[0.8] z-[1] **:[.line3]:translate-x-[0.5em]  **:[.line3]:md:translate-x-[0em] **:[.line2]:md:translate-x-[0.5em] **:[.word]:duration-700 **:[.word]:delay-[0s] **:[.word]:ease-in-out **:[.word]:translate-y-[120%] group-[.opened]:**:[.word]:translate-y-0  **:[.word-mask]:my-[-0.32em] **:[.word-mask]:py-[0.16em] group-[.opened]:**:[.word]:delay-[0.55s]"
+data-split>
+La jeunesse<br />
+JPV<br />
+Pierre Vivante</h4><div
+class="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,#000000_0%,_transparent_100%)] opacity-50 z-[2] translate-x-[100%] duration-600 delay-[0.3s] ease-in-out group-[.opened]:translate-x-0 group-[.opened]:delay-[0.25s]"></div>
+<picture
+class="w-full h-full object-cover object-center translate-x-[100%] duration-600 delay-[0.3s] ease-in-out group-[.opened]:translate-x-0 group-[.opened]:delay-[0.25s] relative z-[1]">
+<source media="(min-width: 768px)">
+<img class="w-full h-full object-cover object-center" src="img/jpv-eveil.jpg"
+alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"><noscript><img class="w-full h-full object-cover object-center"
+src="img/jpv-eveil.jpg"
+alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"></noscript>
+</picture></div></div></div><section id="services"><div class="bandeau"><div class="container"><p class="bandeau__manuscrit">Rendez-vous pour un gala</p></div><div class="bandeau__piste" aria-label="Inoubliable, Grandiose, Mémorable, Généreux, Solennel, Unique"><div class="bandeau__defile" aria-hidden="true"><span class="bandeau__mot">Inoubliable</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Grandiose</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Mémorable</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Généreux</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Solennel</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Unique</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Inoubliable</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Grandiose</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Mémorable</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Généreux</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Solennel</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Unique</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg></div></div><div class="container"><div class="bandeau__cta"><a class="button-secondary button-red" href="#formulaire">Rejoins-nous<svg class="ml-[12px] translate-y-[2px]" width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><line y1="-0.5" x2="13.494" y2="-0.5" transform="matrix(0.70715 -0.707064 0.70715 0.707064 0.707153 10.5024)" stroke="#4C181A" /><path d="M0.271729 0.5L10.2762 0.5L10.2762 10.5033" stroke="#4C181A" /></svg></a></div></div></div></section><section id="realisations"><div class="pt-[80px] lg:pt-[160px] pb-[60px]"><div
+class="group/projects w-full flex flex-wrap flex-col items-start justify-start gap-y-[32px] lg:gap-y-[5em] 2xl:gap-y-[48px] "><div class="group/projectWrapper single-project opened"
+data-animate-section data-project-wrapper><div class="group/project container flex flex-wrap items-center justify-start gap-x-[12px] lg:gap-x-[24px] cursor-pointer"
+data-project><h3 class="flex flex-wrap items-center justify-start gap-x-[16px] lg:gap-x-[24px] text-[7.5vw] sm:text-[6vw] lg:text-[7vw] 2xl:text-[100px] text-[var(--darkred)] duration-300 ease-in-out lg:group-hover/projects:text-[var(--rose)] hover:!text-[var(--darkred)] lg:group-hover/project:!text-[var(--darkred)] group-[.opened]/projectWrapper:!text-[var(--darkred)]"
+data-animate-element="split">
+<span class="flex flex-wrap items-center justify-start gap-x-[0.3em] sm:gap-x-[24px]">Une soirée<div class="hidden sm:flex items-center overflow-hidden h-auto w-0 mt-[-0.25em]" data-project-image>
+<picture class="block h-[1em] w-[60px] lg:w-[1.5em] max-w-none object-cover object-center">
+<source media="(min-width: 768px)">
+<img class="w-full h-full object-cover object-center" src="img/gal-1.svg"
+alt="Gala Héritage" loading="eager" decoding="async"><noscript><img class="w-full h-full object-cover object-center"
+src="img/gal-1.svg"
+alt="Gala Héritage" loading="eager" decoding="async"></noscript>
+</picture></div>
+en <span class="mot-sans">images</span></span></h3>
+<span data-animate-element="fade">
+<span class="lg:!opacity-100 lg:!translate-y-0">
+<svg class="w-[5.3vw] lg:w-[74px] h-auto origin-top-left lg:duration-300 lg:ease-in-out translate-y-[-0.16em] lg:translate-y-[-8px] lg:scale-[0] lg:group-hover/project:scale-[1] lg:group-[.opened]/projectWrapper:scale-[1]"
+width="74" height="74" viewBox="0 0 74 74" fill="none"
+xmlns="http://www.w3.org/2000/svg">
+<line y1="-2" x2="94.4211" y2="-2"
+transform="matrix(0.707064 0.70715 -0.707064 0.70715 2.00122 4.5459)"
+stroke="#4C181A" stroke-width="4" />
+<path d="M71.9956 6.5L71.9956 71.5042L7 71.5042" stroke="#4C181A" stroke-width="4" />
+<path d="M74 6.5L74 73.5L70.2353 68.8793C70.2353 33.3924 67.4118 12.5069 66 6.5L74 6.5Z"
+fill="#4C181A" />
+<path d="M7 73.5L74 73.5L69.3793 69.7353C33.8924 69.7353 13.0069 66.9118 7 65.5L7 73.5Z"
+fill="#4C181A" />
+<path
+d="M6.5 0L0 6C17.2 20 52.1667 54.8333 67.5 70.5L71 67.5C52.6 51.5 20.3333 15.8333 6.5 0Z"
+fill="#4C181A" />
+</svg>
+</span>
+</span></div><div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out group-[.opened]/projectWrapper:grid-rows-[1fr]"
+data-animate-element="fade"><div class="overflow-hidden"><div class="w-full pt-[120px] lg:pt-[192px] relative">
+<span class="w-full h-[1px] bg-[var(--darkred)] absolute top-[82px] left-0"></span><div
+class="w-full grid grid-cols-1 sm:grid-cols-[5fr_3fr] lg:grid-cols-[8fr_4fr] 2xl:grid-cols-[10fr_4fr] gap-[40px] lg:gap-x-[0px] mb-[48px]"><div class="inline-slider project-slider group/slider w-full relative !overflow-visible pl-[24px] sm:pl-[48px] lg:pl-[80px]"
+data-images="[&quot;img/gal-2.svg&quot;, &quot;img/gal-3.svg&quot;, &quot;img/gal-4.svg&quot;, &quot;img/gal-5.svg&quot;, &quot;img/gal-6.svg&quot;, &quot;img/gal-7.svg&quot;, &quot;img/gal-8.svg&quot;, &quot;img/gal-9.svg&quot;, &quot;img/gal-10.svg&quot;, &quot;img/gal-11.svg&quot;, &quot;img/gal-12.svg&quot;, &quot;img/gal-13.svg&quot;]"><div
+class="inline-slider__track w-full !overflow-visible cursor-grab [touch-action:_pan-y] active:cursor-grabbing"><div
+class="inline-slider__list flex items-center gap-[24px] shrink-0 whitespace-nowrap !overflow-visible"><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.01s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-6.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.06s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-7.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.11s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-8.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.16s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-9.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.21s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-10.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.26s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-11.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.31s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-12.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.36s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-13.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.41s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-2.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.46s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-3.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.51s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-4.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div><div
+class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
+style="--delay: 0.56s">
+<picture>
+<source media="(min-width: 768px)">
+<img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
+width="150" height="150"
+src="img/gal-5.svg"
+alt="Gala Héritage"
+loading="eager" decoding="async">
+</picture></div></div></div></div><div class="flex flex-wrap items-center justify-start gap-x-[16px] mt-[24px]"
+data-slider-controls><p class="text-[14px] text-[var(--darkred)]">Défiler les images</p><div class="block w-[120px] h-[6px] rounded-full bg-[var(--rose)] relative"
+data-slider-progress-track>
+<span
+class="block w-[36px] h-full rounded-full bg-[var(--darkred)] absolute top-0  left-0 cursor-grab active:cursor-grabbing transition-transform duration-100 ease-linear"
+data-slider-progress-bar></span></div></div></div><div
+class="relative z-[1] bg-[var(--gray)] pl-[24px] lg:pl-[60px] pr-[24px] sm:pr-[48px] lg:pr-[80px]"><p class="text-[16px] text-[var(--darkred)] mb-[48px] lg:mb-[64px]">
+Une soirée de communion, de partage et de célébration, où la jeunesse de Gembloux se rassemble autour d’une cause qui la dépasse : bâtir la maison de ceux qui viendront après.</p><div class="flex flex-wrap items-center justify-start gap-x-[8px]"><p class="text-[16px] text-[var(--rose)]">2026</p>
+<svg width="6" height="6" viewBox="0 0 6 6" fill="none"
+xmlns="http://www.w3.org/2000/svg">
+<circle cx="3" cy="3" r="3" fill="#B99184" />
+</svg><p class="text-[16px] text-[var(--darkred)]">
+Gala</p></div></div></div></div></div></div></div></div></div></section><div class="group/wrapper flex items-center justify-center fixed top-0 left-0 w-full h-screen z-[999] [&.opened]:opacity-100 [&.opened]:pointer-events-auto opacity-0 pointer-events-none duration-400 ease-in-out"
+data-project-lightbox data-lenis-prevent><div class="absolute top-0 left-0 w-full h-full bg-[#000] opacity-[0.9]" data-project-close></div>
+<svg class="fixed top-[30px] right-[30px] cursor-pointer z-[3]" data-project-close width="28" height="28"
+viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path
+d="M2.36873 0.000654222C5.53076 4.05372 10.4472 9.34932 13.3026 12.317L13.9117 12.944C16.6249 10.1517 22.0564 4.3585 25.4567 -3.6312e-05L27.826 2.36919C23.7728 5.5313 18.4774 10.449 15.5096 13.3045L14.8812 13.9135C17.6741 16.6273 23.4669 22.0568 27.8246 25.4565L25.4554 27.8257C22.0556 23.4679 16.626 17.6753 13.9124 14.8824C11.1985 17.6755 5.76899 23.4681 2.36942 27.8257L1.1672 26.6235L1.16789 26.6228L0.00158015 25.4565C4.05468 22.2944 9.34959 17.3773 12.3173 14.5219L12.9436 13.9135L12.3159 13.3038C9.34804 10.4482 4.05317 5.5311 0.000199081 2.36919L2.36873 0.000654222Z"
+fill="#D9D9D9" />
+</svg><div class="w-full h-full flex items-center justify-center duration-600 ease-in-out translate-y-[50px] group-[.opened]/wrapper:translate-y-0"
+data-project-slider-wrapper></div></div><section id=""><div class="container  pt-[90px] lg:pt-[120px] pb-[90px] lg:pb-[100px]"><div data-animate-section><h2 class="w-auto inline-flex flex-wrap items-center justify-between text-[7vw] sm:text-[64px] lg:text-[100px] mb-[24px] sm:mb-[64px] lg:mb-[100px] **:[.line]:!flex **:[.line]:flex-wrap **:[.line]:items-center **:[.line]:justify-between **:[.line-mask]:w-full **:[.word3]:ml-[0.2em]"
+data-animate-element="split-expand">
+<span>Gala</span> <span>Héritage</span></h2><div class="row-start-2 sm:row-start-1 grid grid-cols-1 sm:grid-cols-2 gap-[32px] sm:gap-[16px]"><div class="self-end sm:pr-[36px] lg:pr-[33.33333%]" data-animate-element="fade"><p class="text-[16px] lg:text-[18px] mb-[64px]">Le Gala Héritage est le rendez-vous annuel de la JPV. Un dîner de gala porté de bout en bout par la jeunesse : l’accueil, le programme, la louange, le service en salle. Tenue de soirée, table dressée, et une soirée pensée pour être vécue ensemble.<br />
+<br />
+L’intégralité des bénéfices est versée à la construction du nouveau temple de La Pierre Vivante. Les places sont limitées et la réservation est obligatoire : l’équipe confirme chaque demande avant la soirée.</p><div class="grid grid-cols-2 gap-[16px] mb-[64px]"><p
+class="text-[14px] lg:text-[16px] leading-[1.2] pt-[12px] pr-[15px] lg:pr-[25%] w-full border-t-[1px] border-[var(--darkred)]">
+Samedi 14 novembre 2026 — 18h00</p><p
+class="text-[14px] lg:text-[16px] leading-[1.2] pt-[12px] pr-[15px] lg:pr-[25%] w-full border-t-[1px] border-[var(--darkred)]">
+Gembloux (5030), Belgique</p></div>
+<a class="button-secondary button-red" href="#formulaire?soutien=1"
+target="">
+Réserver ma place                        <svg class="ml-[12px] translate-y-[2px]" width="11" height="11" viewBox="0 0 11 11" fill="none"
+xmlns="http://www.w3.org/2000/svg">
+<line y1="-0.5" x2="13.494" y2="-0.5"
+transform="matrix(0.70715 -0.707064 0.70715 0.707064 0.707153 10.5024)"
+stroke="#4C181A" />
+<path d="M0.271729 0.5L10.2762 0.5L10.2762 10.5033" stroke="#4C181A" />
+</svg>
+</a></div><div class="row-start-1 sm:col-start-2 w-full relative overflow-hidden self-start"
+data-animate-element="fade">
+<picture class="w-full ">
+<source media="(min-width: 768px)">
+<img data-parallax class="w-full h-full object-cover object-center scale-[1.1]" src="img/gala-lieu.svg"
+alt="Gala Héritage" loading="eager" decoding="async"><noscript><img data-parallax class="w-full h-full object-cover object-center scale-[1.1]"
+src="img/gala-lieu.svg"
+alt="Gala Héritage" loading="eager" decoding="async"></noscript>
+</picture></div></div></div></div></section><section class="ttfb-sec"><div class="container"><div class="ttfb-sec__grille" data-animate-section>
+<div class="ttfb-sec__gauche" data-animate-element="fade">
+<figure class="polaroid polaroid--ttfb">
+<img src="img/ttfb-equipe.svg" alt="Thirty Two Future Belgium" loading="lazy" decoding="async">
+<figcaption>thirty two</figcaption>
+</figure>
+</div>
+<div class="ttfb-sec__droite">
+<p class="ttfb-sec__label" data-animate-element="fade">En collaboration avec</p>
+<a class="ttfb-sec__logo" data-animate-element="fade" href="https://www.instagram.com/thirtytwofuturebelgium/" target="_blank" rel="noopener">
+<img src="img/ttfb-logo.png" alt="Thirty Two Future Belgium" loading="lazy" decoding="async">
+</a>
+<div class="ttfb-sec__texte" data-animate-element="fade">
+<p>Thirty Two Future Belgium s’associe à la JPV pour le Gala Héritage. Deux collectifs belges,
+la même génération, et une soirée construite à quatre mains.</p>
+<p class="ttfb-sec__aecrire">[ Description à écrire avec TTFB — qui ils sont, ce qu’ils apportent à la soirée. ]</p>
+</div>
+<a class="ttfb-sec__lien" data-animate-element="fade" href="https://www.instagram.com/thirtytwofuturebelgium/" target="_blank" rel="noopener">@thirtytwofuturebelgium</a>
+</div>
+</div></div></section><section id=""
+class="flex flex-wrap items-center justify-center bg-[var(--darkred)] relative z-[1] overflow-hidden"><div class="container flex flex-wrap flex-col items-center justify-center pt-[220px] lg:pt-[300px] pb-[180px] lg:pb-[240px] relative z-[1]"
+data-animate-section="0.5"><h2 class="w-full lg:w-[66.66666%] max-w-[640px] mb-[36px] md:mb-[48px] text-center text-[9vw] sm:text-[48px] lg:text-[64px] text-[var(--gray)]"
+data-animate-element="split">
+Prêt à bâtir l’héritage?</h2><div data-animate-element="fade">
+<a class="button btn-gala " href="#formulaire" target="">Réserver ma place</a></div></div><div class="absolute w-full h-full flex flex-wrap items-center justify-center will-change-transform"
+data-animate-section="0.2" data-magnet>
+<svg class="absolute w-[calc(100%_+_30px)] sm:w-auto h-auto sm:h-[calc(100%_+_60px)] lg:h-[calc(100%_+_120px)]"
+data-animate-element="scale" width="846" height="846" viewBox="0 0 846 846" fill="none"
+xmlns="http://www.w3.org/2000/svg">
+<path
+d="M423 846C656.616 846 846 656.616 846 423C846 189.384 656.616 0 423 0C189.384 0 0 189.384 0 423C0 656.616 189.384 846 423 846Z"
+fill="url(#paint0_radial_2120_174)" />
+<defs>
+<radialGradient id="paint0_radial_2120_174" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+gradientTransform="translate(423 423) rotate(90) scale(423)">
+<stop offset="0.37" stop-color="#4C181A" />
+<stop offset="0.51" stop-color="#4E1919" />
+<stop offset="0.61" stop-color="#581D19" />
+<stop offset="0.7" stop-color="#672319" />
+<stop offset="0.79" stop-color="#7E2D18" />
+<stop offset="0.86" stop-color="#9A3917" />
+<stop offset="0.94" stop-color="#BD4716" />
+<stop offset="1" stop-color="#DF5616" />
+</radialGradient>
+</defs>
+</svg></div></section></main></div><footer class="pb-[30px]" data-parallax><div class="container pt-[64px] pb-[64px] sm:pb-[90px] lg:pb-[110px]"><div class="w-full grid sm:grid-cols-2 lg:grid-cols-3 gap-[48px] sm:gap-[32px] relative"><div class="sm:pr-[48px] lg:pr-[40px]"><p class="text-[16px] mb-[32px]">La JPV Squad est la jeunesse de l’église La Pierre Vivante, à Gembloux. Enseignée, épanouie, engagée.</p><div>
+<a class="button-secondary button-red" href="#formulaire"
+target="">
+Réserver ma place                        <svg class="ml-[12px] translate-y-[2px]" width="11" height="11" viewBox="0 0 11 11" fill="none"
+xmlns="http://www.w3.org/2000/svg">
+<line y1="-0.5" x2="13.494" y2="-0.5"
+transform="matrix(0.70715 -0.707064 0.70715 0.707064 0.707153 10.5024)"
+stroke="#4C181A" />
+<path d="M0.271729 0.5L10.2762 0.5L10.2762 10.5033" stroke="#4C181A" />
+</svg>
+</a></div></div><div class="flex flex-wrap flex-col items-start justify-start gap-[10px]">
+<p class="text-[11px] tracking-[.18em] uppercase opacity-60 mb-[6px]">Le gala</p>
+<p class="text-[16px]">Samedi 14 novembre 2026</p>
+<p class="text-[16px]">18h00 → 23h00</p>
+<p class="text-[16px]">Gembloux (5030), Belgique</p>
+<p class="text-[16px] opacity-70">Au profit du nouveau temple</p>
+</div><div class="flex flex-wrap flex-col items-start justify-start gap-[16px]">
+<a class="text-[16px] text-[var(--darkred)] duration-300 ease-in-out lg:hover:opacity-50"
+href="https://www.instagram.com/jpv_squad/"
+target="_blank">Instagram</a>
+<a class="text-[16px] text-[var(--darkred)] duration-300 ease-in-out lg:hover:opacity-50"
+href="https://www.instagram.com/jpv_squad/"
+target="_blank">WhatsApp</a>
+<a class="text-[16px] text-[var(--darkred)] duration-300 ease-in-out lg:hover:opacity-50"
+href="https://lapierrevivante.org"
+target="_blank">L’église</a></div>
+<svg class="hidden sm:block absolute top-0 right-0" width="45" height="54" viewBox="0 0 215 254" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M107.5 8 L204 39 V136 C204 197 158 227 107.5 246 C57 227 11 197 11 136 V39 Z" stroke="#4C181A" stroke-width="7" fill="none" stroke-miterlimit="2"/><path d="M107.5 62 L119 107 L164 118.5 L119 130 L107.5 175 L96 130 L51 118.5 L96 107 Z" fill="#4C181A"/><path d="M62 118.5 H80 M135 118.5 H153" stroke="#4C181A" stroke-width="5" stroke-linecap="round"/><circle cx="107.5" cy="42.3" r="5.5" fill="#4C181A"/><circle cx="107.5" cy="195.1" r="5.5" fill="#4C181A"/></svg></div></div><div class="w-[calc(100%_-_48px)] sm:w-[calc(100%_-_80px)] mx-[24px] sm:mx-[40px]">
+<img class="w-full mb-[12px]" src="img/jpv-squad.svg?v=2" alt="JPV Squad"><noscript><img class="w-full mb-[12px]" src="img/jpv-squad.svg?v=2" alt="JPV Squad"></noscript><div class="w-full flex flex-wrap items-center justify-center sm:justify-between gap-[12px]"><p class="text-[15px] text-[var(--rose)]">2026 © JPV Squad — Jeunesse de la Pierre Vivante</p><div class="flex flex-wrap items-center justify-center sm:justify-end gap-[12px] sm:gap-[24px]"><div>
+<a class="text-[15px] text-[var(--rose)] duration-150 ease-[var(--custom-ease-1)] lg:hover:opacity-50"
+href="https://maps.google.com/?q=Chauss%C3%A9e+de+Namur+47,+5030+Gembloux"
+target="">Chaussée de Namur 47, 5030 Gembloux</a></div><p class="text-[15px] text-[var(--rose)]">Culte le dimanche <a
+class="duration-150 ease-[var(--custom-ease-1)] lg:hover:opacity-50"
+href="https://www.instagram.com/jpv_squad/" target="_blank">10h30 → 12h30</a></p></div></div></div></footer></div>
+<script src="js/a.js" defer></script>
+<script>
+/* 2 Mo de vidéo : on ne les demande qu'à l'approche de la section, et la lecture
+   s'arrête dès qu'elle quitte l'écran — inutile de décoder dans le vide. */
+(function(){
+  var v = document.querySelector('[data-fond-video]');
+  if (!v) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;  /* le poster suffit */
+  var charge = false;
+  new IntersectionObserver(function(entrees){
+    entrees.forEach(function(e){
+      if (e.isIntersecting){
+        if (!charge){ charge = true; v.preload = 'auto'; v.load(); }
+        var p = v.play(); if (p && p.catch) p.catch(function(){});
+      } else if (charge){ v.pause(); }
+    });
+  }, { rootMargin: '300px 0px' }).observe(v.closest('#a-propos'));
+})();
+</script>
+<script>
+/* La billetterie ne se charge qu'à l'ouverture du panneau : inutile d'imposer
+   une requête vers Billetweb à tous les visiteurs qui ne réservent pas. */
+(function(){
+  var modal  = document.querySelector('[data-form-modal]');
+  var cadre  = document.querySelector('.billetterie__cadre');
+  if (!modal || !cadre) return;
+  var frame   = cadre.querySelector('iframe');
+  var attente = cadre.querySelector('[data-billet-attente]');
+
+  function charger(){
+    if (frame.src) return;
+    frame.src = frame.dataset.billetSrc;
+    frame.addEventListener('load', function(){
+      frame.classList.add('pret');
+      attente.classList.add('parti');
+    }, { once:true });
+  }
+  new MutationObserver(function(){
+    if (modal.classList.contains('opened')) charger();
+  }).observe(modal, { attributes:true, attributeFilter:['class'] });
+  if (modal.classList.contains('opened')) charger();
+
+  /* Si Billetweb annonce sa hauteur, on la suit : plus de défilement interne. */
+  addEventListener('message', function(e){
+    if (!/(^|\.)billetweb\.fr$/.test(new URL(e.origin).hostname)) return;
+    var h = e.data && (e.data.height || e.data.frameHeight ||
+            (typeof e.data === 'string' && /^\d+$/.test(e.data) && +e.data));
+    if (h > 400 && h < 20000) frame.style.height = h + 'px';
+  });
+})();
+</script>
+</body>
+</html>
