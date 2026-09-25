@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>JPV Squad — Gala Héritage</title>
-<meta name="description" content="Le Gala Héritage de la JPV Squad, la jeunesse de l’église La Pierre Vivante de Gembloux. Une soirée de communion, de partage et de célébration au profit de la construction du nouveau temple.">
+<meta name="description" content="Le Gala Héritage de la JPV Squad, la jeunesse de l’église La Pierre Vivante de Gembloux. Une soirée joyeuse dans la présence de Dieu, portée par la jeunesse : on y célèbre, on y apprend.">
 <meta property="og:locale" content="fr_BE">
 <meta property="og:type" content="website">
 <meta property="og:title" content="JPV Squad — Gala Héritage">
-<meta property="og:description" content="Samedi 14 novembre 2026, Gembloux. Au profit de la construction du nouveau temple.">
+<meta property="og:description" content="Samedi 14 novembre 2026, Gembloux. Une soirée joyeuse dans la présence de Dieu.">
 <meta property="og:site_name" content="JPV Squad">
 <meta name="theme-color" content="#4c181a">
 <link rel="stylesheet" href="css/site.css">
@@ -77,25 +77,16 @@
   border-radius:10px;
   overflow:hidden;
   box-shadow:0 30px 70px rgba(0,0,0,.45);
-  min-height:520px;
+  min-height:600px;
 }
-.billetterie__cadre iframe{
-  display:block; width:100%; border:0;
-  height:1250px;                       /* large, pour qu'il n'y ait pas de second
-                                          défilement à l'intérieur du cadre */
-  opacity:0; transition:opacity .5s ease;
+/* Le script officiel de Billetweb transforme le lien .shop_frame en iframe et
+   ajuste lui-même la hauteur (data-resize="1"). Donc pas de hauteur fixe ici :
+   elle recréerait le second défilement à l'intérieur du cadre. */
+.billetterie__cadre iframe{ display:block; width:100%; border:0 }
+.billetterie__cadre .shop_frame{        /* visible tant que le script n'a pas répondu */
+  display:block; padding:30px; text-align:center;
+  font-family:'Overused', sans-serif; font-size:15px; color:#7a5f57;
 }
-.billetterie__cadre iframe.pret{ opacity:1 }
-@media (max-width:767px){ .billetterie__cadre iframe{ height:1550px } }
-
-.billetterie__attente{
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
-  font-family:'Overused', sans-serif; font-size:14px;
-  letter-spacing:.06em; color:#7a5f57;
-  pointer-events:none; transition:opacity .4s ease;
-}
-.billetterie__attente.parti{ opacity:0 }
 
 .billetterie__repli{
   font-family:'Overused', sans-serif;
@@ -258,42 +249,62 @@ a.btn-gala:hover{
 }
 
 
-/* ── Section partenaire ────────────────────────────────────────────────────
-   Mise en page reprise de la section « dream team » de faithibiza : polaroid
-   incliné à gauche, logo et texte à droite. Le fond prend le bleu de marque de
-   TTFB, comme faithibiza prend le sien — c'est leur bloc, il porte leur couleur. */
-.ttfb-sec{ --ttfb:#020CBC; background:var(--ttfb); color:#fff; padding:clamp(80px,12vh,150px) 0 }
-.ttfb-sec__grille{ display:grid; gap:clamp(48px,6vw,90px); align-items:center }
-@media (min-width:900px){ .ttfb-sec__grille{ grid-template-columns:1fr 1fr } }
 
-.polaroid--ttfb{
-  position:static; width:min(100%, 430px); margin-inline:auto;
-  transform:rotate(-4deg);
-  box-shadow:0 34px 70px rgba(0,0,0,.34);
-}
-.polaroid--ttfb figcaption{ color:var(--ttfb) }
+/* ── Bande immersive : le titre passe entre la salle et le public ──────────
+   La même photo est posée deux fois. Celle du dessus est masquée pour ne
+   garder que le bas — les spectateurs de dos — puis assombrie jusqu'à la
+   silhouette : le raccord du masque devient invisible, et le texte se
+   retrouve physiquement derrière les gens. Les deux couches se décalent en
+   sens inverse au défilement, d'où la profondeur.
 
-.ttfb-sec__droite{ text-align:center }
-.ttfb-sec__label{
-  font-family:'Overused', sans-serif;
-  font-size:12px; letter-spacing:.2em; text-transform:uppercase;
-  opacity:.72; margin:0 0 clamp(22px,3vw,34px);
+   Le premier plan déborde volontairement sur la section suivante et s'y
+   dissout : sans ça, la bande se terminait sur une arête franche. C'est
+   pour cela que le fond est découpé par .foule__clip et non par la section :
+   un overflow sur la section couperait aussi les silhouettes. */
+.foule{
+  position:relative; z-index:2; overflow:visible;
+  min-height:clamp(560px, 92svh, 900px);
+  display:grid; place-items:center;
+  background:#05070d;
+  --sortie: clamp(70px, 13vw, 190px);   /* de combien le public mord en dessous */
 }
-.ttfb-sec__logo{ display:block; margin:0 auto clamp(30px,4vw,48px); width:min(76%, 330px) }
-.ttfb-sec__logo img{ display:block; width:100%; height:auto }
-.ttfb-sec__texte p{
-  font-family:'Overused', sans-serif;
-  font-size:clamp(16px,1.35vw,20px); line-height:1.62;
-  max-width:46ch; margin:0 auto 1.1em;
+.foule__clip{ position:absolute; inset:0; overflow:clip; z-index:0 }
+.foule__couche{ position:absolute; inset:-70px 0; pointer-events:none }
+.foule__couche img{
+  width:100%; height:100%; object-fit:cover; object-position:center 40%;
+  display:block; will-change:transform;
 }
-.ttfb-sec__aecrire{ opacity:.6 }
-.ttfb-sec__lien{
-  display:inline-block; margin-top:clamp(14px,2vw,24px);
-  font-family:'Overused', sans-serif; font-size:14px; letter-spacing:.06em;
-  color:#fff; border-bottom:1px solid rgba(255,255,255,.5); padding-bottom:3px;
-  transition:border-color .4s var(--ease-in-out);
+.foule__fond img{ filter:brightness(.62) saturate(1.05) }
+
+/* Le premier plan est une vraie découpe : l'alpha du fichier suit le contour
+   des têtes (seuil de luminance, plancher plein sous la ligne des épaules).
+   Plus de dégradé pour simuler la coupe — il ne sert plus qu'à dissoudre la
+   partie qui déborde sur la section suivante. */
+.foule__avant{ z-index:2; inset:-70px 0 calc(-1 * var(--sortie)) }
+.foule__avant img{
+  object-position:center bottom;
+  filter:brightness(.34) contrast(1.12);
+  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--sortie) * 1.5), transparent 100%);
+          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--sortie) * 1.5), transparent 100%);
 }
-.ttfb-sec__lien:hover{ border-color:#fff }
+
+.foule__texte{
+  position:relative; z-index:1; text-align:center;
+  padding:0 24px; color:var(--gray); will-change:transform;
+}
+.foule__sur, .foule__sous{
+  font-family:'Overused', sans-serif; font-size:12px;
+  letter-spacing:.2em; text-transform:uppercase; opacity:.82; margin:0;
+}
+.foule__titre{
+  font-family:Columbia, serif; text-transform:uppercase;
+  font-size:clamp(44px, 8.5vw, 132px); line-height:.98;
+  margin:clamp(18px,2.4vw,30px) 0;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
+}
+@media (prefers-reduced-motion: reduce){
+  .foule__couche img, .foule__texte{ transform:none !important }
+}
 
 [data-hero]{ --bghero:#000 }
 
@@ -477,24 +488,24 @@ class="w-full md:w-[75.25%] lg:w-[67%] md:ml-[24.5%] lg:ml-[33%] px-[24px] md:px
 class="w-[75%] lg:w-1/2 text-[var(--gray)] text-[24px] md:text-[36px] lg:text-[48px] font-['Overused'] normal-case mb-[64px] lg:mb-[96px] opacity-0 translate-y-[15px] duration-400 delay-[0.1s] ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:delay-[0.6s]">
 Réserver ma place</h3><div
 class="pb-[120px] opacity-0 translate-y-[15px] duration-400 ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:delay-[0.7s]"><div class="grid grid-cols-1 gap-[64px]"><div class="billetterie">
-  <p class="billetterie__intro">Samedi 14 novembre 2026, à partir de 18h00 — Gembloux.
-  L’intégralité des bénéfices est versée à la construction du nouveau temple de La Pierre Vivante.
+  <p class="billetterie__intro">Samedi 14 novembre 2026, à partir de 17h30 — Gembloux.
+  Une soirée joyeuse dans la présence de Dieu, où l’on célèbre et où l’on apprend.
   Chaque place doit être associée à un nom et un prénom.</p>
   <div class="billetterie__cadre">
-    <div class="billetterie__attente" data-billet-attente>Chargement de la billetterie…</div>
-    <iframe
-      data-billet-src="https://www.billetweb.fr/gala-jpv-heritage"
-      title="Billetterie — Gala JPV Héritage"
-      allow="payment"
-      referrerpolicy="origin"></iframe>
+    <a title="Vente de billets en ligne" href="https://www.billetweb.fr/shop.php?event=gala-jpv-heritage"
+       class="shop_frame" target="_blank"
+       data-src="https://www.billetweb.fr/shop.php?event=gala-jpv-heritage"
+       data-max-width="100%" data-initial-height="600" data-scrolling="no"
+       data-id="gala-jpv-heritage" data-resize="1">Vente de billets en ligne</a>
+    <script type="text/javascript" src="https://www.billetweb.fr/js/export.js"></script>
   </div>
   <p class="billetterie__repli">La billetterie ne s’affiche pas&nbsp;?
-    <a href="https://www.billetweb.fr/gala-jpv-heritage" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
+    <a href="https://www.billetweb.fr/shop.php?event=gala-jpv-heritage" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
   </p>
 </div></div>  </div></div></div></div><div id="content"><main id="main"><section id=""
 class="h-[100svh] w-full flex flex-wrap items-center justify-center bg-[var(--bghero)] will-change-[background-color] relative z-[1] overflow-hidden"
 data-hero><div class="absolute w-full h-full flex flex-wrap items-center justify-center"
-data-hero-images-wrapper><div class="hero3d"><div class="hero3d__ring" style="--dur:58s;--dir:1"><figure class="hero3d__card" style="--a:346.6deg;--rm:1.094;--wm:0.859;--y:-7.1vh;--tilt:-1.0deg;--ar:1.7778;--d:-2.17s"><img src="img/jpv-eveil.jpg" alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-eveil.jpg" data-alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:60.6deg;--rm:0.74;--wm:1.229;--y:14.0vh;--tilt:-8.8deg;--ar:0.7500;--d:-48.23s"><img src="img/ring-4.svg" alt="Cadre photo — Gala Héritage" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/ring-4.svg" data-alt="Cadre photo — Gala Héritage" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:129.3deg;--rm:0.809;--wm:1.296;--y:-15.0vh;--tilt:0.2deg;--ar:0.7500;--d:-37.17s"><img src="img/jpv-reunion.jpg" alt="La jeunesse de la JPV en louange" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-reunion.jpg" data-alt="La jeunesse de la JPV en louange" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:172.8deg;--rm:0.861;--wm:1.18;--y:8.5vh;--tilt:6.1deg;--ar:1.5000;--d:-30.15s"><img src="img/ring-6.svg" alt="Cadre photo — Été JPV" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/ring-6.svg" data-alt="Cadre photo — Été JPV" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:229.8deg;--rm:0.804;--wm:1.043;--y:-21.5vh;--tilt:-10.4deg;--ar:1.7772;--d:-20.97s"><img src="img/jpv-louange.jpg" alt="La chorale de la JPV — « Je suis de ta maison »" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-louange.jpg" data-alt="La chorale de la JPV — « Je suis de ta maison »" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:312.3deg;--rm:1.186;--wm:1.146;--y:-8.2vh;--tilt:8.6deg;--ar:0.5611;--d:-7.69s"><img src="img/jpv-mon-corps-ton-temple.jpg" alt="Mon corps ton temple — 31 octobre" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-mon-corps-ton-temple.jpg" data-alt="Mon corps ton temple — 31 octobre" loading="eager" decoding="async"></figure></div><div class="hero3d__ring" style="--dur:84s;--dir:-1"><figure class="hero3d__card" style="--a:352.9deg;--rm:0.812;--wm:1.085;--y:-20.1vh;--tilt:-1.4deg;--ar:1.0000;--d:-82.35s"><img src="img/jpv-ciel.jpg" alt="Ciel — vision Starlight" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-ciel.jpg" data-alt="Ciel — vision Starlight" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:79.1deg;--rm:0.855;--wm:1.295;--y:-17.7vh;--tilt:5.0deg;--ar:1.0000;--d:-18.46s"><img src="img/jpv-music-genesis.jpg" alt="JPV Music — Genesis" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-music-genesis.jpg" data-alt="JPV Music — Genesis" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:147.3deg;--rm:1.243;--wm:1.045;--y:13.3vh;--tilt:5.7deg;--ar:1.7772;--d:-34.37s"><img src="img/jpv-podcast.jpg" alt="Le podcast de la JPV Squad" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-podcast.jpg" data-alt="Le podcast de la JPV Squad" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:222.1deg;--rm:1.05;--wm:0.943;--y:-25.7vh;--tilt:-6.7deg;--ar:1.0000;--d:-51.82s"><img src="img/ring-8.svg" alt="Cadre photo — Réunion JPV" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/ring-8.svg" data-alt="Cadre photo — Réunion JPV" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:273.3deg;--rm:1.226;--wm:1.096;--y:-26.3vh;--tilt:-10.0deg;--ar:1.0000;--d:-63.76s"><img src="img/ring-11.svg" alt="Cadre photo — Gembloux" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/ring-11.svg" data-alt="Cadre photo — Gembloux" loading="eager" decoding="async"></figure></div><div class="hero3d__center"><div class="container relative z-[1] translate-y-[1.5em]" data-animate-section="2.7"><div class="titre"><h1 class="text-[var(--gray)] text-center text-[13vw] md:text-[72px] lg:text-[120px] mb-[36px] lg:mb-[60px]"
+data-hero-images-wrapper><div class="hero3d"><div class="hero3d__ring" style="--dur:58s;--dir:1"><figure class="hero3d__card" style="--a:22.0deg;--rm:0.965;--wm:1.025;--y:24.9vh;--tilt:-0.1deg;--ar:1.4981;--d:-54.46s"><img src="img/gala-scene.jpg" alt="Le Gala — sur scène" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/gala-scene.jpg" data-alt="Le Gala — sur scène" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:346.6deg;--rm:1.094;--wm:0.859;--y:-7.1vh;--tilt:-1.0deg;--ar:1.7778;--d:-2.17s"><img src="img/jpv-eveil.jpg" alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-eveil.jpg" data-alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:60.6deg;--rm:0.74;--wm:1.229;--y:14.0vh;--tilt:-8.8deg;--ar:1.4981;--d:-48.23s"><img src="img/gala-guitare.jpg" alt="Le Gala — scène acoustique" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/gala-guitare.jpg" data-alt="Le Gala — scène acoustique" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:129.3deg;--rm:0.809;--wm:1.296;--y:-15.0vh;--tilt:0.2deg;--ar:0.7500;--d:-37.17s"><img src="img/jpv-reunion.jpg" alt="La jeunesse de la JPV en louange" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-reunion.jpg" data-alt="La jeunesse de la JPV en louange" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:172.8deg;--rm:0.861;--wm:1.18;--y:8.5vh;--tilt:6.1deg;--ar:1.4981;--d:-30.15s"><img src="img/gala-choeur.jpg" alt="Le Gala — le chœur" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/gala-choeur.jpg" data-alt="Le Gala — le chœur" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:229.8deg;--rm:0.804;--wm:1.043;--y:-21.5vh;--tilt:-10.4deg;--ar:1.7772;--d:-20.97s"><img src="img/jpv-louange.jpg" alt="La chorale de la JPV — « Je suis de ta maison »" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-louange.jpg" data-alt="La chorale de la JPV — « Je suis de ta maison »" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:312.3deg;--rm:1.186;--wm:1.146;--y:-8.2vh;--tilt:8.6deg;--ar:0.5611;--d:-7.69s"><img src="img/jpv-mon-corps-ton-temple.jpg" alt="Mon corps ton temple — 31 octobre" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-mon-corps-ton-temple.jpg" data-alt="Mon corps ton temple — 31 octobre" loading="eager" decoding="async"></figure></div><div class="hero3d__ring" style="--dur:84s;--dir:-1"><figure class="hero3d__card" style="--a:38.0deg;--rm:0.794;--wm:0.897;--y:15.0vh;--tilt:-4.3deg;--ar:1.4981;--d:-8.87s"><img src="img/gala-chant.jpg" alt="Le Gala — la voix" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/gala-chant.jpg" data-alt="Le Gala — la voix" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:352.9deg;--rm:0.812;--wm:1.085;--y:-20.1vh;--tilt:-1.4deg;--ar:1.0000;--d:-82.35s"><img src="img/jpv-ciel.jpg" alt="Ciel — vision Starlight" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-ciel.jpg" data-alt="Ciel — vision Starlight" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:79.1deg;--rm:0.855;--wm:1.295;--y:-17.7vh;--tilt:5.0deg;--ar:1.0000;--d:-18.46s"><img src="img/jpv-music-genesis.jpg" alt="JPV Music — Genesis" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-music-genesis.jpg" data-alt="JPV Music — Genesis" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:147.3deg;--rm:1.243;--wm:1.045;--y:13.3vh;--tilt:5.7deg;--ar:1.7772;--d:-34.37s"><img src="img/jpv-podcast.jpg" alt="Le podcast de la JPV Squad" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/jpv-podcast.jpg" data-alt="Le podcast de la JPV Squad" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:222.1deg;--rm:1.05;--wm:0.943;--y:-25.7vh;--tilt:-6.7deg;--ar:1.4981;--d:-51.82s"><img src="img/gala-remise-prix.jpg" alt="Le Gala — la remise des prix" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/gala-remise-prix.jpg" data-alt="Le Gala — la remise des prix" loading="eager" decoding="async"></figure><figure class="hero3d__card" style="--a:273.3deg;--rm:1.226;--wm:1.096;--y:-26.3vh;--tilt:-10.0deg;--ar:1.4981;--d:-63.76s"><img src="img/gala-buffet.jpg" alt="Le Gala — le dîner" loading="eager" decoding="async"><img aria-hidden="true" class="dos" src="img/gala-buffet.jpg" data-alt="Le Gala — le dîner" loading="eager" decoding="async"></figure></div><div class="hero3d__center"><div class="container relative z-[1] translate-y-[1.5em]" data-animate-section="2.7"><div class="titre"><h1 class="text-[var(--gray)] text-center text-[13vw] md:text-[72px] lg:text-[120px] mb-[36px] lg:mb-[60px]"
 data-animate-element="split"><span class="praise">Héritage</span></h1><span class="gala">Gala</span></div><div data-animate-element="fade">
 <a class="button button-gray btn-gala btn-gala--hero" href="#formulaire" target="">Réserver ma place</a></div></div></div></div></div></div></div></section><section id="a-propos"
 class="lg:h-[300vh] w-full flex flex-wrap items-start justify-center bg-[var(--bghero)] will-change-[background-color] relative py-[120px] lg:py-0"
@@ -504,7 +515,7 @@ data-about-image-wrapper data-about><div class="apropos-noir" aria-hidden="true"
 </video>
 <span class="apropos-fond__voile"></span>
 </div><figure class="polaroid">
-<img src="img/jpv-reunion.jpg" alt="La jeunesse de la JPV, 2025" loading="lazy" decoding="async">
+<img src="img/gala-chant.jpg" alt="Le Gala 2025 — la voix" loading="lazy" decoding="async">
 <figcaption>2025</figcaption>
 </figure><div class="group lg:h-screen w-full flex flex-wrap items-center justify-center lg:sticky top-0 left z-[2] lg:overflow-hidden"
 data-about-button-wrapper><div class="flex flex-col lg:flex-row flex-wrap items-center justify-center lg:relative"
@@ -535,10 +546,10 @@ gradientTransform="translate(75.5 75.5) rotate(90) scale(75.5)">
 data-animate-element="fade" data-about-image-div>
 <picture>
 <source media="(min-width: 768px)">
-<img data-about-image class="w-full max-w-[370px] lg:scale-[1.4]" src="img/jpv-reunion.jpg"
-alt="La jeunesse de la Pierre Vivante, à Gembloux" loading="eager" decoding="async"><noscript><img data-about-image class="w-full max-w-[370px] lg:scale-[1.4]"
-src="img/jpv-reunion.jpg"
-alt="La jeunesse de la Pierre Vivante, à Gembloux" loading="eager" decoding="async"></noscript>
+<img data-about-image class="w-full max-w-[370px] lg:scale-[1.4]" src="img/gala-choeur.jpg"
+alt="Le chœur de la JPV au Gala" loading="eager" decoding="async"><noscript><img data-about-image class="w-full max-w-[370px] lg:scale-[1.4]"
+src="img/gala-choeur.jpg"
+alt="Le chœur de la JPV au Gala" loading="eager" decoding="async"></noscript>
 </picture></div></div><div class="hidden lg:block absolute top-[-75px] left-[-75px] z-[2] pointer-events-none" data-about-button><div
 class="w-[150px] h-auto flex flex-wrap items-center justify-center origin-center scale-0 duration-300 ease-in-out lg:group-[.hover]:scale-100">
 <span class="text-[16px] text-[var(--gray)] absolute z-[1]">En savoir plus</span>
@@ -632,10 +643,10 @@ class="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,#000000_0%,
 <picture
 class="w-full h-full object-cover object-center translate-x-[100%] duration-600 delay-[0.3s] ease-in-out group-[.opened]:translate-x-0 group-[.opened]:delay-[0.25s] relative z-[1]">
 <source media="(min-width: 768px)">
-<img class="w-full h-full object-cover object-center" src="img/jpv-eveil.jpg"
-alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"><noscript><img class="w-full h-full object-cover object-center"
-src="img/jpv-eveil.jpg"
-alt="Extrait du court-métrage JPV — L’Éveil" loading="eager" decoding="async"></noscript>
+<img class="w-full h-full object-cover object-center" src="img/gala-scene.jpg"
+alt="Le Gala — sur scène" loading="eager" decoding="async"><noscript><img class="w-full h-full object-cover object-center"
+src="img/gala-scene.jpg"
+alt="Le Gala — sur scène" loading="eager" decoding="async"></noscript>
 </picture></div></div></div><section id="services"><div class="bandeau"><div class="container"><p class="bandeau__manuscrit">Rendez-vous pour un gala</p></div><div class="bandeau__piste" aria-label="Inoubliable, Grandiose, Mémorable, Généreux, Solennel, Unique"><div class="bandeau__defile" aria-hidden="true"><span class="bandeau__mot">Inoubliable</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Grandiose</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Mémorable</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Généreux</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Solennel</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Unique</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Inoubliable</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Grandiose</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Mémorable</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Généreux</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Solennel</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg><span class="bandeau__mot">Unique</span><svg class="bandeau__etoile" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.53439 1.58633C9.80005 0.599647 11.1999 0.599644 11.4656 1.58632L13.002 7.29241C13.0946 7.63656 13.3634 7.90537 13.7076 7.99803L19.4137 9.53439C20.4004 9.80005 20.4004 11.1999 19.4137 11.4656L13.7076 13.002C13.3634 13.0946 13.0946 13.3634 13.002 13.7076L11.4656 19.4137C11.2 20.4004 9.80005 20.4004 9.53439 19.4137L7.99803 13.7076C7.90537 13.3634 7.63656 13.0946 7.29241 13.002L1.58633 11.4656C0.599647 11.2 0.599644 9.80005 1.58632 9.53439L7.29241 7.99803C7.63656 7.90537 7.90537 7.63656 7.99803 7.29241L9.53439 1.58633Z" fill="currentColor"/></svg></div></div><div class="container"><div class="bandeau__cta"><a class="button-secondary button-red" href="#formulaire">Rejoins-nous<svg class="ml-[12px] translate-y-[2px]" width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><line y1="-0.5" x2="13.494" y2="-0.5" transform="matrix(0.70715 -0.707064 0.70715 0.707064 0.707153 10.5024)" stroke="#4C181A" /><path d="M0.271729 0.5L10.2762 0.5L10.2762 10.5033" stroke="#4C181A" /></svg></a></div></div></div></section><section id="realisations"><div class="pt-[80px] lg:pt-[160px] pb-[60px]"><div
 class="group/projects w-full flex flex-wrap flex-col items-start justify-start gap-y-[32px] lg:gap-y-[5em] 2xl:gap-y-[48px] "><div class="group/projectWrapper single-project opened"
 data-animate-section data-project-wrapper><div class="group/project container flex flex-wrap items-center justify-start gap-x-[12px] lg:gap-x-[24px] cursor-pointer"
@@ -644,10 +655,10 @@ data-animate-element="split">
 <span class="flex flex-wrap items-center justify-start gap-x-[0.3em] sm:gap-x-[24px]">Une soirée<div class="hidden sm:flex items-center overflow-hidden h-auto w-0 mt-[-0.25em]" data-project-image>
 <picture class="block h-[1em] w-[60px] lg:w-[1.5em] max-w-none object-cover object-center">
 <source media="(min-width: 768px)">
-<img class="w-full h-full object-cover object-center" src="img/gal-1.svg"
-alt="Gala Héritage" loading="eager" decoding="async"><noscript><img class="w-full h-full object-cover object-center"
-src="img/gal-1.svg"
-alt="Gala Héritage" loading="eager" decoding="async"></noscript>
+<img class="w-full h-full object-cover object-center" src="img/gala-guitare.jpg"
+alt="Le Gala — scène acoustique" loading="eager" decoding="async"><noscript><img class="w-full h-full object-cover object-center"
+src="img/gala-guitare.jpg"
+alt="Le Gala — scène acoustique" loading="eager" decoding="async"></noscript>
 </picture></div>
 en <span class="mot-sans">images</span></span></h3>
 <span data-animate-element="fade">
@@ -672,7 +683,7 @@ fill="#4C181A" />
 data-animate-element="fade"><div class="overflow-hidden"><div class="w-full pt-[120px] lg:pt-[192px] relative">
 <span class="w-full h-[1px] bg-[var(--darkred)] absolute top-[82px] left-0"></span><div
 class="w-full grid grid-cols-1 sm:grid-cols-[5fr_3fr] lg:grid-cols-[8fr_4fr] 2xl:grid-cols-[10fr_4fr] gap-[40px] lg:gap-x-[0px] mb-[48px]"><div class="inline-slider project-slider group/slider w-full relative !overflow-visible pl-[24px] sm:pl-[48px] lg:pl-[80px]"
-data-images="[&quot;img/gal-2.svg&quot;, &quot;img/gal-3.svg&quot;, &quot;img/gal-4.svg&quot;, &quot;img/gal-5.svg&quot;, &quot;img/gal-6.svg&quot;, &quot;img/gal-7.svg&quot;, &quot;img/gal-8.svg&quot;, &quot;img/gal-9.svg&quot;, &quot;img/gal-10.svg&quot;, &quot;img/gal-11.svg&quot;, &quot;img/gal-12.svg&quot;, &quot;img/gal-13.svg&quot;]"><div
+data-images="[&quot;img/gala-choeur.jpg&quot;, &quot;img/gala-chant.jpg&quot;, &quot;img/gala-scene.jpg&quot;, &quot;img/gala-remise-prix.jpg&quot;, &quot;img/gala-buffet.jpg&quot;, &quot;img/gala-public.jpg&quot;, &quot;img/jpv-louange.jpg&quot;, &quot;img/jpv-reunion.jpg&quot;, &quot;img/jpv-podcast.jpg&quot;, &quot;img/jpv-music-genesis.jpg&quot;, &quot;img/jpv-mon-corps-ton-temple.jpg&quot;, &quot;img/jpv-eveil.jpg&quot;]"><div
 class="inline-slider__track w-full !overflow-visible cursor-grab [touch-action:_pan-y] active:cursor-grabbing"><div
 class="inline-slider__list flex items-center gap-[24px] shrink-0 whitespace-nowrap !overflow-visible"><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -681,8 +692,8 @@ style="--delay: 0.01s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-6.svg"
-alt="Gala Héritage"
+src="img/gala-buffet.jpg"
+alt="Le Gala — le dîner"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -691,8 +702,8 @@ style="--delay: 0.06s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-7.svg"
-alt="Gala Héritage"
+src="img/gala-public.jpg"
+alt="Le Gala — la salle"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -701,8 +712,8 @@ style="--delay: 0.11s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-8.svg"
-alt="Gala Héritage"
+src="img/jpv-louange.jpg"
+alt="La chorale de la JPV"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -711,8 +722,8 @@ style="--delay: 0.16s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-9.svg"
-alt="Gala Héritage"
+src="img/jpv-reunion.jpg"
+alt="La jeunesse en louange"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -721,8 +732,8 @@ style="--delay: 0.21s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-10.svg"
-alt="Gala Héritage"
+src="img/jpv-podcast.jpg"
+alt="Le podcast de la JPV Squad"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -731,8 +742,8 @@ style="--delay: 0.26s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-11.svg"
-alt="Gala Héritage"
+src="img/jpv-music-genesis.jpg"
+alt="JPV Music — Genesis"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -741,8 +752,8 @@ style="--delay: 0.31s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-12.svg"
-alt="Gala Héritage"
+src="img/jpv-mon-corps-ton-temple.jpg"
+alt="Mon corps ton temple — 31 octobre"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -751,8 +762,8 @@ style="--delay: 0.36s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-13.svg"
-alt="Gala Héritage"
+src="img/jpv-eveil.jpg"
+alt="Court-métrage JPV — L’Éveil"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -761,8 +772,8 @@ style="--delay: 0.41s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-2.svg"
-alt="Gala Héritage"
+src="img/gala-choeur.jpg"
+alt="Le Gala — le chœur"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -771,8 +782,8 @@ style="--delay: 0.46s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-3.svg"
-alt="Gala Héritage"
+src="img/gala-chant.jpg"
+alt="Le Gala — la voix"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -781,8 +792,8 @@ style="--delay: 0.51s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-4.svg"
-alt="Gala Héritage"
+src="img/gala-scene.jpg"
+alt="Le Gala — sur scène"
 loading="eager" decoding="async">
 </picture></div></div><div
 class="inline-slider__slide shrink-0 h-[fit-content] max-h-[150px] w-[auto] max-w-[150px] overflow-hidden lg:duration-600 lg:ease-in-out lg:group-[.dragging]/slider:scale-[0.85]"><div class="opacity-0 translate-y-[20px] duration-600 ease-in-out group-[.opened]/projectWrapper:opacity-100 group-[.opened]/projectWrapper:translate-y-0 delay-[var(--delay)]"
@@ -791,8 +802,8 @@ style="--delay: 0.56s">
 <source media="(min-width: 768px)">
 <img class="no-lazy-load h-full w-full object-contain cursor-pointer lg:hover:scale-[1.1] lg:duration-600 lg:ease-in-out"
 width="150" height="150"
-src="img/gal-5.svg"
-alt="Gala Héritage"
+src="img/gala-remise-prix.jpg"
+alt="Le Gala — la remise des prix"
 loading="eager" decoding="async">
 </picture></div></div></div></div><div class="flex flex-wrap items-center justify-start gap-x-[16px] mt-[24px]"
 data-slider-controls><p class="text-[14px] text-[var(--darkred)]">Défiler les images</p><div class="block w-[120px] h-[6px] rounded-full bg-[var(--rose)] relative"
@@ -814,13 +825,25 @@ viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
 d="M2.36873 0.000654222C5.53076 4.05372 10.4472 9.34932 13.3026 12.317L13.9117 12.944C16.6249 10.1517 22.0564 4.3585 25.4567 -3.6312e-05L27.826 2.36919C23.7728 5.5313 18.4774 10.449 15.5096 13.3045L14.8812 13.9135C17.6741 16.6273 23.4669 22.0568 27.8246 25.4565L25.4554 27.8257C22.0556 23.4679 16.626 17.6753 13.9124 14.8824C11.1985 17.6755 5.76899 23.4681 2.36942 27.8257L1.1672 26.6235L1.16789 26.6228L0.00158015 25.4565C4.05468 22.2944 9.34959 17.3773 12.3173 14.5219L12.9436 13.9135L12.3159 13.3038C9.34804 10.4482 4.05317 5.5311 0.000199081 2.36919L2.36873 0.000654222Z"
 fill="#D9D9D9" />
 </svg><div class="w-full h-full flex items-center justify-center duration-600 ease-in-out translate-y-[50px] group-[.opened]/wrapper:translate-y-0"
-data-project-slider-wrapper></div></div><section id=""><div class="container  pt-[90px] lg:pt-[120px] pb-[90px] lg:pb-[100px]"><div data-animate-section><h2 class="w-auto inline-flex flex-wrap items-center justify-between text-[7vw] sm:text-[64px] lg:text-[100px] mb-[24px] sm:mb-[64px] lg:mb-[100px] **:[.line]:!flex **:[.line]:flex-wrap **:[.line]:items-center **:[.line]:justify-between **:[.line-mask]:w-full **:[.word3]:ml-[0.2em]"
+data-project-slider-wrapper></div></div><section class="foule" aria-label="Le public du Gala">
+<div class="foule__clip" aria-hidden="true"><div class="foule__couche foule__fond">
+<img src="img/gala-public-large.jpg" alt="" loading="lazy" decoding="async">
+</div></div>
+<div class="foule__texte">
+<p class="foule__sur">Le Gala Héritage</p>
+<h2 class="foule__titre">Une génération<br>debout</h2>
+<p class="foule__sous">Samedi 14 novembre 2026 — Gembloux</p>
+</div>
+<div class="foule__couche foule__avant" aria-hidden="true">
+<img src="img/gala-public-decoupe.webp" alt="" loading="lazy" decoding="async">
+</div>
+</section><section id=""><div class="container  pt-[90px] lg:pt-[120px] pb-[90px] lg:pb-[100px]"><div data-animate-section><h2 class="w-auto inline-flex flex-wrap items-center justify-between text-[7vw] sm:text-[64px] lg:text-[100px] mb-[24px] sm:mb-[64px] lg:mb-[100px] **:[.line]:!flex **:[.line]:flex-wrap **:[.line]:items-center **:[.line]:justify-between **:[.line-mask]:w-full **:[.word3]:ml-[0.2em]"
 data-animate-element="split-expand">
 <span>Gala</span> <span>Héritage</span></h2><div class="row-start-2 sm:row-start-1 grid grid-cols-1 sm:grid-cols-2 gap-[32px] sm:gap-[16px]"><div class="self-end sm:pr-[36px] lg:pr-[33.33333%]" data-animate-element="fade"><p class="text-[16px] lg:text-[18px] mb-[64px]">Le Gala Héritage est le rendez-vous annuel de la JPV. Un dîner de gala porté de bout en bout par la jeunesse : l’accueil, le programme, la louange, le service en salle. Tenue de soirée, table dressée, et une soirée pensée pour être vécue ensemble.<br />
 <br />
-L’intégralité des bénéfices est versée à la construction du nouveau temple de La Pierre Vivante. Les places sont limitées et la réservation est obligatoire : l’équipe confirme chaque demande avant la soirée.</p><div class="grid grid-cols-2 gap-[16px] mb-[64px]"><p
+Un moment joyeux, vécu dans la présence de Dieu : on y célèbre, on y apprend, on en repart nourri. Les places sont limitées et la réservation est obligatoire : l’équipe confirme chaque demande avant la soirée.</p><div class="grid grid-cols-2 gap-[16px] mb-[64px]"><p
 class="text-[14px] lg:text-[16px] leading-[1.2] pt-[12px] pr-[15px] lg:pr-[25%] w-full border-t-[1px] border-[var(--darkred)]">
-Samedi 14 novembre 2026 — 18h00</p><p
+Samedi 14 novembre 2026 — 17h30</p><p
 class="text-[14px] lg:text-[16px] leading-[1.2] pt-[12px] pr-[15px] lg:pr-[25%] w-full border-t-[1px] border-[var(--darkred)]">
 Gembloux (5030), Belgique</p></div>
 <a class="button-secondary button-red" href="#formulaire?soutien=1"
@@ -836,30 +859,11 @@ stroke="#4C181A" />
 data-animate-element="fade">
 <picture class="w-full ">
 <source media="(min-width: 768px)">
-<img data-parallax class="w-full h-full object-cover object-center scale-[1.1]" src="img/gala-lieu.svg"
-alt="Gala Héritage" loading="eager" decoding="async"><noscript><img data-parallax class="w-full h-full object-cover object-center scale-[1.1]"
-src="img/gala-lieu.svg"
-alt="Gala Héritage" loading="eager" decoding="async"></noscript>
-</picture></div></div></div></div></section><section class="ttfb-sec"><div class="container"><div class="ttfb-sec__grille" data-animate-section>
-<div class="ttfb-sec__gauche" data-animate-element="fade">
-<figure class="polaroid polaroid--ttfb">
-<img src="img/ttfb-equipe.svg" alt="Thirty Two Future Belgium" loading="lazy" decoding="async">
-<figcaption>thirty two</figcaption>
-</figure>
-</div>
-<div class="ttfb-sec__droite">
-<p class="ttfb-sec__label" data-animate-element="fade">En collaboration avec</p>
-<a class="ttfb-sec__logo" data-animate-element="fade" href="https://www.instagram.com/thirtytwofuturebelgium/" target="_blank" rel="noopener">
-<img src="img/ttfb-logo.png" alt="Thirty Two Future Belgium" loading="lazy" decoding="async">
-</a>
-<div class="ttfb-sec__texte" data-animate-element="fade">
-<p>Thirty Two Future Belgium s’associe à la JPV pour le Gala Héritage. Deux collectifs belges,
-la même génération, et une soirée construite à quatre mains.</p>
-<p class="ttfb-sec__aecrire">[ Description à écrire avec TTFB — qui ils sont, ce qu’ils apportent à la soirée. ]</p>
-</div>
-<a class="ttfb-sec__lien" data-animate-element="fade" href="https://www.instagram.com/thirtytwofuturebelgium/" target="_blank" rel="noopener">@thirtytwofuturebelgium</a>
-</div>
-</div></div></section><section id=""
+<img data-parallax class="w-full h-full object-cover object-center scale-[1.1]" src="img/affiche-heritage.jpg"
+alt="Affiche du Gala Héritage" loading="eager" decoding="async"><noscript><img data-parallax class="w-full h-full object-cover object-center scale-[1.1]"
+src="img/affiche-heritage.jpg"
+alt="Affiche du Gala Héritage" loading="eager" decoding="async"></noscript>
+</picture></div></div></div></div></section><section id=""
 class="flex flex-wrap items-center justify-center bg-[var(--darkred)] relative z-[1] overflow-hidden"><div class="container flex flex-wrap flex-col items-center justify-center pt-[220px] lg:pt-[300px] pb-[180px] lg:pb-[240px] relative z-[1]"
 data-animate-section="0.5"><h2 class="w-full lg:w-[66.66666%] max-w-[640px] mb-[36px] md:mb-[48px] text-center text-[9vw] sm:text-[48px] lg:text-[64px] text-[var(--gray)]"
 data-animate-element="split">
@@ -898,9 +902,9 @@ stroke="#4C181A" />
 </a></div></div><div class="flex flex-wrap flex-col items-start justify-start gap-[10px]">
 <p class="text-[11px] tracking-[.18em] uppercase opacity-60 mb-[6px]">Le gala</p>
 <p class="text-[16px]">Samedi 14 novembre 2026</p>
-<p class="text-[16px]">18h00 → 23h00</p>
+<p class="text-[16px]">17h30 → 23h00</p>
 <p class="text-[16px]">Gembloux (5030), Belgique</p>
-<p class="text-[16px] opacity-70">Au profit du nouveau temple</p>
+<p class="text-[16px] opacity-70">Dans la présence de Dieu</p>
 </div><div class="flex flex-wrap flex-col items-start justify-start gap-[16px]">
 <a class="text-[16px] text-[var(--darkred)] duration-300 ease-in-out lg:hover:opacity-50"
 href="https://www.instagram.com/jpv_squad/"
@@ -920,6 +924,40 @@ class="duration-150 ease-[var(--custom-ease-1)] lg:hover:opacity-50"
 href="https://www.instagram.com/jpv_squad/" target="_blank">10h30 → 12h30</a></p></div></div></div></footer></div>
 <script src="js/a.js" defer></script>
 <script>
+/* Profondeur au défilement : le fond descend doucement, le premier plan monte
+   plus vite, le texte suit à peine. Branché sur Lenis (déjà utilisé par le
+   thème) et écrit dans une seule frame. Le test « hors écran » est fait dans
+   le calcul plutôt que par un IntersectionObserver : celui-ci pouvait ne
+   jamais répondre, et les couches restaient alors figées. */
+(function(){
+  var sec = document.querySelector('.foule');
+  if (!sec || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var fond  = sec.querySelector('.foule__fond img'),
+      avant = sec.querySelector('.foule__avant img'),
+      texte = sec.querySelector('.foule__texte'),
+      prevu = false;
+
+  function place(){
+    prevu = false;
+    var r = sec.getBoundingClientRect();
+    if (r.bottom < -120 || r.top > innerHeight + 120) return;   // hors champ
+    var p = 1 - (r.bottom / (innerHeight + r.height));          // 0 à l'entrée, 1 à la sortie
+    p = p < 0 ? 0 : p > 1 ? 1 : p;
+    var c = (p - 0.5) * 2;                                      // -1 … +1
+    // amplitudes calées sur le débord de 70px : au-delà, l'image laisserait un vide
+    fond.style.transform  = 'translate3d(0,' + (c *  30).toFixed(1) + 'px,0)';
+    avant.style.transform = 'translate3d(0,' + (c * -54).toFixed(1) + 'px,0)';
+    texte.style.transform = 'translate3d(0,' + (c * -14).toFixed(1) + 'px,0)';
+  }
+  function demande(){ if (!prevu){ prevu = true; requestAnimationFrame(place); } }
+
+  if (window.lenis) window.lenis.on('scroll', demande);
+  addEventListener('scroll', demande, { passive:true });
+  addEventListener('resize', demande, { passive:true });
+  place();
+})();
+</script>
+<script>
 /* 2 Mo de vidéo : on ne les demande qu'à l'approche de la section, et la lecture
    s'arrête dès qu'elle quitte l'écran — inutile de décoder dans le vide. */
 (function(){
@@ -937,37 +975,6 @@ href="https://www.instagram.com/jpv_squad/" target="_blank">10h30 → 12h30</a><
   }, { rootMargin: '300px 0px' }).observe(v.closest('#a-propos'));
 })();
 </script>
-<script>
-/* La billetterie ne se charge qu'à l'ouverture du panneau : inutile d'imposer
-   une requête vers Billetweb à tous les visiteurs qui ne réservent pas. */
-(function(){
-  var modal  = document.querySelector('[data-form-modal]');
-  var cadre  = document.querySelector('.billetterie__cadre');
-  if (!modal || !cadre) return;
-  var frame   = cadre.querySelector('iframe');
-  var attente = cadre.querySelector('[data-billet-attente]');
 
-  function charger(){
-    if (frame.src) return;
-    frame.src = frame.dataset.billetSrc;
-    frame.addEventListener('load', function(){
-      frame.classList.add('pret');
-      attente.classList.add('parti');
-    }, { once:true });
-  }
-  new MutationObserver(function(){
-    if (modal.classList.contains('opened')) charger();
-  }).observe(modal, { attributes:true, attributeFilter:['class'] });
-  if (modal.classList.contains('opened')) charger();
-
-  /* Si Billetweb annonce sa hauteur, on la suit : plus de défilement interne. */
-  addEventListener('message', function(e){
-    if (!/(^|\.)billetweb\.fr$/.test(new URL(e.origin).hostname)) return;
-    var h = e.data && (e.data.height || e.data.frameHeight ||
-            (typeof e.data === 'string' && /^\d+$/.test(e.data) && +e.data));
-    if (h > 400 && h < 20000) frame.style.height = h + 'px';
-  });
-})();
-</script>
 </body>
 </html>

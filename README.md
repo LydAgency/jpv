@@ -110,17 +110,15 @@ elles se chargent toutes les onze au premier écran.
 
 ## Ce qu'il reste à remplacer
 
-| Quoi | Où | État |
-|---|---|---|
-| Heure et lieu exacts | `index.html`, cherche `14 novembre 2026` | la date est confirmée, l'heure (18h00) et « Gembloux (5030) » restent à valider |
-| Lien WhatsApp | pied de page + menu, pointe vers Instagram | ⚠️ |
-| Photos | tous les `img/*.svg` sont des cadres étiquetés | ⚠️ |
-| Portrait de Dady | `img/portrait-dady.svg` | ⚠️ |
+**Plus aucun cadre placeholder sur le site** : les 13 cartes de la sphère, la galerie horizontale,
+la section « à propos » et la section Gala portent toutes de vraies photos.
 
-Les trois seules vraies photos viennent du site JPV existant : `jpv-eveil.jpg` (extrait de
-*L'Éveil*), `jpv-ciel.jpg`, `jpv-reunion.jpg`.
+| Quoi | État |
+|---|---|
+| Photos des artistes | à ajouter après la soirée, pour ne pas divulguer les vidéos (demande de Rayan) |
+| Album partagé | en attente de l'accès |
 
-### La section « à propos » : fond vidéo, courbe et polaroid
+## La section « à propos » : fond vidéo, courbe et polaroid
 
 **Le fond** est le reel Instagram de la JPV (`DCPDlZ-MkF9`), récupéré avec `yt-dlp` — posté par
 « Jeunesse de la Pierre Vivante de Gembloux », donc c'est votre contenu. Original : 720×1280, 80 s,
@@ -190,30 +188,6 @@ Il paraissait vide sur trois causes cumulées, toutes corrigées :
    réduisait au quart gauche. La grille est passée à trois colonnes, avec une colonne « Le gala »
    (date, horaire, lieu, cause) qui remplit l'espace en servant à quelque chose.
 
-### La section partenaire
-
-**Thirty Two Future Belgium** (`@thirtytwofuturebelgium`), en grande section, sur le modèle du bloc
-« dream team » de faithibiza.com : polaroid incliné à gauche, logo et texte à droite.
-
-Le fond prend **le bleu de marque de TTFB** (`#020CBC`, échantillonné dans leur logo), comme
-faithibiza prend le sien. C'est leur bloc, il porte leur couleur — et ça le détache nettement du
-reste du site, qui va du noir au crème.
-
-Le logo fourni était blanc sur un carré bleu. Il a été **détouré** (`ffmpeg colorkey`) pour donner
-`img/ttfb-logo.png`, blanc sur transparent : indispensable pour le poser sur le fond bleu sans
-carré visible. 520 px, 123 Ko.
-
-**Deux choses à compléter :**
-
-| Quoi | Où |
-|---|---|
-| La photo de l'équipe TTFB | `img/ttfb-equipe.svg` — cadre à remplacer par une vraie photo carrée |
-| La description | `.ttfb-sec__aecrire` — le paragraphe entre crochets, à écrire avec eux |
-
-Le premier paragraphe est volontairement factuel et neutre (ils sont partenaires du gala) : je n'ai
-aucune information sur ce qu'est TTFB, et je préfère un texte vrai et court à une présentation
-inventée. Le second est un emplacement marqué, dans la même convention que les cadres photo.
-
 ### Le bouton de réservation
 
 Rectangle rouge (`#e01f1f`) aux **bords ondulés**, texte en **Praise** — classe `a.btn-gala`.
@@ -232,39 +206,22 @@ les marges automatiques ne centrent rien — c'est ce qui décalait le bouton ve
 
 ## La billetterie
 
-Le bouton **« Réserver ma place »** ouvre le panneau plein écran du thème, qui contient désormais
-la billetterie **Billetweb** de l'événement — le formulaire hérité de Monarque a été retiré. Un
-seul chemin de réservation, pas deux qui se concurrencent.
+Le bouton **« Réserver ma place »** ouvre le panneau plein écran du thème, qui contient le **code
+d'intégration officiel de Billetweb** — un lien `a.shop_frame` que leur script `export.js`
+transforme en iframe.
 
-`https://www.billetweb.fr/gala-jpv-heritage` — vérifié : la page existe, et Billetweb n'envoie
-aucun en-tête `X-Frame-Options` ni `CSP frame-ancestors`, donc l'intégration passe.
+C'est leur code qui gère la hauteur (`data-resize="1"`). Il ne faut donc **pas** imposer de
+`height` à l'iframe côté CSS : on recréerait le second défilement à l'intérieur du cadre, le point
+que soulevait la page de test.
 
-**L'iframe ne se charge qu'à l'ouverture du panneau.** Un `MutationObserver` guette la classe
-`opened` sur `[data-form-modal]` et pose alors le `src`. Les visiteurs qui ne réservent pas
-n'envoient aucune requête à Billetweb.
+Le cadre autour (fond crème, coins arrondis, ombre, intro, lien de repli) est à nous. **Le contenu
+de l'iframe vient d'un autre domaine : impossible de le styler d'ici.** Les couleurs et la police à
+l'intérieur se règlent dans Billetweb → Options → Apparence. Pour s'accorder au site : bordeaux
+`#4c181a`, crème `#DED9D7`, rosé `#b99184`.
 
-### Ce qui est brandé, et ce qui ne peut pas l'être
-
-Le contenu de l'iframe vient d'un autre domaine : **impossible de le styler depuis le site**, c'est
-une règle du navigateur, pas une limite de mise en œuvre. Donc :
-
-| | Où ça se règle |
-|---|---|
-| Fond bordeaux, titre en Overused, intro, ombre, coins arrondis, fondu au chargement, message d'attente, lien de repli | ici, dans `.billetterie*` |
-| **Couleurs, police et logo à l'intérieur de la billetterie** | **dans Billetweb** → Options → Apparence |
-
-Pour que l'intérieur s'accorde : bordeaux `#4c181a`, crème `#DED9D7`, rosé `#b99184`.
-
-### La hauteur du cadre
-
-L'iframe est à **1250 px** (1550 px sous 768 px de large), volontairement généreux : il ne doit pas
-y avoir de second défilement *à l'intérieur* du cadre — c'est le point que soulevait ta page de
-test. Le panneau, lui, défile normalement.
-
-Un écouteur `postMessage` accepte en plus une hauteur annoncée par Billetweb, si leur script en
-envoie une. Si tu récupères le **code d'intégration officiel** dans ton back-office Billetweb
-(il embarque leur script de redimensionnement automatique), remplace l'`<iframe>` par le leur :
-ce sera plus fiable qu'une hauteur fixe.
+Contrepartie du code officiel : `export.js` est chargé dès l'arrivée sur la page, y compris pour
+les visiteurs qui ne réservent pas. La version précédente ne chargeait rien tant que le panneau
+restait fermé.
 
 ## Écarts assumés par rapport au gabarit
 
