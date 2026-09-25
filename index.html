@@ -306,6 +306,20 @@ a.btn-gala:hover{
   .foule__couche img, .foule__texte{ transform:none !important }
 }
 
+/* ── Section Gala : le texte tient la hauteur de l'affiche ─────────────────
+   L'affiche est un portrait 2:3, donc très haute ; à 18px le paragraphe
+   laissait la moitié de la colonne vide. Écrit en CSS et non en classes
+   Tailwind : la feuille du thème est pré-compilée, une classe arbitraire
+   comme text-[28px] n'y existe pas et n'aurait aucun effet. */
+.gala-col{ padding-right:clamp(0px, 3vw, 48px) }
+.gala-texte{
+  font-size:clamp(20px, 2.8vw, 48px);
+  line-height:1.34;
+  margin-bottom:clamp(32px, 4vw, 60px);
+}
+.gala-info{ font-size:clamp(15px, 1.35vw, 23px) }
+.gala-col .button-secondary{ font-size:clamp(16px, 1.3vw, 21px) }
+
 [data-hero]{ --bghero:#000 }
 
 [data-hero-images-wrapper]{
@@ -488,7 +502,7 @@ class="w-full md:w-[75.25%] lg:w-[67%] md:ml-[24.5%] lg:ml-[33%] px-[24px] md:px
 class="w-[75%] lg:w-1/2 text-[var(--gray)] text-[24px] md:text-[36px] lg:text-[48px] font-['Overused'] normal-case mb-[64px] lg:mb-[96px] opacity-0 translate-y-[15px] duration-400 delay-[0.1s] ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:delay-[0.6s]">
 Réserver ma place</h3><div
 class="pb-[120px] opacity-0 translate-y-[15px] duration-400 ease-in-out group-[.opened]:opacity-100 group-[.opened]:translate-y-0 group-[.opened]:delay-[0.7s]"><div class="grid grid-cols-1 gap-[64px]"><div class="billetterie">
-  <p class="billetterie__intro">Samedi 14 novembre 2026, à partir de 17h30 — Gembloux.
+  <p class="billetterie__intro">Samedi 14 novembre 2026, à partir de 18h00 — Gembloux.
   Une soirée joyeuse dans la présence de Dieu, où l’on célèbre et où l’on apprend.
   Chaque place doit être associée à un nom et un prénom.</p>
   <div class="billetterie__cadre">
@@ -839,12 +853,12 @@ data-project-slider-wrapper></div></div><section class="foule" aria-label="Le pu
 </div>
 </section><section id=""><div class="container  pt-[90px] lg:pt-[120px] pb-[90px] lg:pb-[100px]"><div data-animate-section><h2 class="w-auto inline-flex flex-wrap items-center justify-between text-[7vw] sm:text-[64px] lg:text-[100px] mb-[24px] sm:mb-[64px] lg:mb-[100px] **:[.line]:!flex **:[.line]:flex-wrap **:[.line]:items-center **:[.line]:justify-between **:[.line-mask]:w-full **:[.word3]:ml-[0.2em]"
 data-animate-element="split-expand">
-<span>Gala</span> <span>Héritage</span></h2><div class="row-start-2 sm:row-start-1 grid grid-cols-1 sm:grid-cols-2 gap-[32px] sm:gap-[16px]"><div class="self-end sm:pr-[36px] lg:pr-[33.33333%]" data-animate-element="fade"><p class="text-[16px] lg:text-[18px] mb-[64px]">Le Gala Héritage est le rendez-vous annuel de la JPV. Un dîner de gala porté de bout en bout par la jeunesse : l’accueil, le programme, la louange, le service en salle. Tenue de soirée, table dressée, et une soirée pensée pour être vécue ensemble.<br />
+<span>Gala</span> <span>Héritage</span></h2><div class="row-start-2 sm:row-start-1 grid grid-cols-1 sm:grid-cols-2 gap-[32px] sm:gap-[16px]"><div class="self-end sm:pr-[36px] gala-col" data-animate-element="fade"><p class="gala-texte">Le Gala Héritage est le rendez-vous annuel de la JPV. Un dîner de gala porté de bout en bout par la jeunesse : l’accueil, le programme, la louange, le service en salle. Tenue de soirée, table dressée, et une soirée pensée pour être vécue ensemble.<br />
 <br />
 Un moment joyeux, vécu dans la présence de Dieu : on y célèbre, on y apprend, on en repart nourri. Les places sont limitées et la réservation est obligatoire : l’équipe confirme chaque demande avant la soirée.</p><div class="grid grid-cols-2 gap-[16px] mb-[64px]"><p
-class="text-[14px] lg:text-[16px] leading-[1.2] pt-[12px] pr-[15px] lg:pr-[25%] w-full border-t-[1px] border-[var(--darkred)]">
-Samedi 14 novembre 2026 — 17h30</p><p
-class="text-[14px] lg:text-[16px] leading-[1.2] pt-[12px] pr-[15px] lg:pr-[25%] w-full border-t-[1px] border-[var(--darkred)]">
+class="gala-info leading-[1.2] pt-[12px] pr-[15px] lg:pr-[25%] w-full border-t-[1px] border-[var(--darkred)]">
+Samedi 14 novembre 2026 — 18h00</p><p
+class="gala-info leading-[1.2] pt-[12px] pr-[15px] lg:pr-[25%] w-full border-t-[1px] border-[var(--darkred)]">
 Gembloux (5030), Belgique</p></div>
 <a class="button-secondary button-red" href="#formulaire?soutien=1"
 target="">
@@ -902,7 +916,7 @@ stroke="#4C181A" />
 </a></div></div><div class="flex flex-wrap flex-col items-start justify-start gap-[10px]">
 <p class="text-[11px] tracking-[.18em] uppercase opacity-60 mb-[6px]">Le gala</p>
 <p class="text-[16px]">Samedi 14 novembre 2026</p>
-<p class="text-[16px]">17h30 → 23h00</p>
+<p class="text-[16px]">18h00 → 23h00</p>
 <p class="text-[16px]">Gembloux (5030), Belgique</p>
 <p class="text-[16px] opacity-70">Dans la présence de Dieu</p>
 </div><div class="flex flex-wrap flex-col items-start justify-start gap-[16px]">
