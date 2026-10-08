@@ -332,6 +332,8 @@ a.btn-gala:hover{
 /* ── Les intervenants ──────────────────────────────────────────────────────
    Une grille de cartes portrait (2:3). Prévue pour accueillir d'autres
    intervenants : il suffit de dupliquer un <figure class="intervenant">. */
+#intervenants{ background:var(--darkred); color:var(--gray) }
+#intervenants h2, #intervenants h2 *{ color:var(--gray) }
 .intervenants__grille{
   display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(24px, 3vw, 48px);
 }
@@ -339,13 +341,13 @@ a.btn-gala:hover{
 .intervenant__photo{ position:relative; overflow:hidden; aspect-ratio:2/3; background:var(--rose) }
 .intervenant__photo img{ width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block }
 .intervenant__nom{
-  font-family:Columbia, serif; text-transform:uppercase; color:var(--darkred);
+  font-family:Columbia, serif; text-transform:uppercase; color:var(--gray);
   font-size:clamp(36px, 4.2vw, 64px); line-height:1; margin-top:clamp(16px, 1.6vw, 24px);
-  padding-top:12px; border-top:1px solid var(--darkred);
+  padding-top:12px; border-top:1px solid var(--gray);
 }
 .intervenant__role{
   font-family:'Overused', sans-serif; font-size:12px; letter-spacing:.2em;
-  text-transform:uppercase; color:var(--darkred); opacity:.82; margin-top:10px;
+  text-transform:uppercase; color:var(--gray); opacity:.82; margin-top:10px;
 }
 
 [data-hero]{ --bghero:#000 }
