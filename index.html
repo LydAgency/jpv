@@ -329,6 +329,25 @@ a.btn-gala:hover{
 .gala-info{ font-size:clamp(15px, 1.35vw, 23px) }
 .gala-col .button-secondary{ font-size:clamp(16px, 1.3vw, 21px) }
 
+/* ── Les intervenants ──────────────────────────────────────────────────────
+   Une grille de cartes portrait (2:3). Prévue pour accueillir d'autres
+   intervenants : il suffit de dupliquer un <figure class="intervenant">. */
+.intervenants__grille{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(24px, 3vw, 48px);
+}
+.intervenant{ margin:0; width:min(100%, 380px) }
+.intervenant__photo{ position:relative; overflow:hidden; aspect-ratio:2/3; background:var(--rose) }
+.intervenant__photo img{ width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block }
+.intervenant__nom{
+  font-family:Columbia, serif; text-transform:uppercase; color:var(--darkred);
+  font-size:clamp(36px, 4.2vw, 64px); line-height:1; margin-top:clamp(16px, 1.6vw, 24px);
+  padding-top:12px; border-top:1px solid var(--darkred);
+}
+.intervenant__role{
+  font-family:'Overused', sans-serif; font-size:12px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--darkred); opacity:.82; margin-top:10px;
+}
+
 [data-hero]{ --bghero:#000 }
 
 [data-hero-images-wrapper]{
@@ -848,7 +867,13 @@ viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
 d="M2.36873 0.000654222C5.53076 4.05372 10.4472 9.34932 13.3026 12.317L13.9117 12.944C16.6249 10.1517 22.0564 4.3585 25.4567 -3.6312e-05L27.826 2.36919C23.7728 5.5313 18.4774 10.449 15.5096 13.3045L14.8812 13.9135C17.6741 16.6273 23.4669 22.0568 27.8246 25.4565L25.4554 27.8257C22.0556 23.4679 16.626 17.6753 13.9124 14.8824C11.1985 17.6755 5.76899 23.4681 2.36942 27.8257L1.1672 26.6235L1.16789 26.6228L0.00158015 25.4565C4.05468 22.2944 9.34959 17.3773 12.3173 14.5219L12.9436 13.9135L12.3159 13.3038C9.34804 10.4482 4.05317 5.5311 0.000199081 2.36919L2.36873 0.000654222Z"
 fill="#D9D9D9" />
 </svg><div class="w-full h-full flex items-center justify-center duration-600 ease-in-out translate-y-[50px] group-[.opened]/wrapper:translate-y-0"
-data-project-slider-wrapper></div></div><section class="foule" aria-label="Le public du Gala">
+data-project-slider-wrapper></div></div><section id="intervenants" aria-label="Les intervenants"><div class="container  pt-[90px] lg:pt-[120px] pb-[90px] lg:pb-[100px]"><div data-animate-section><h2 class="w-auto inline-flex flex-wrap items-center justify-between text-[7vw] sm:text-[64px] lg:text-[100px] mb-[24px] sm:mb-[64px] lg:mb-[100px] **:[.line]:!flex **:[.line]:flex-wrap **:[.line]:items-center **:[.line]:justify-between **:[.line-mask]:w-full **:[.word3]:ml-[0.2em]"
+data-animate-element="split-expand">
+<span>Les</span> <span>intervenants</span></h2><div class="intervenants__grille">
+<figure class="intervenant" data-animate-element="fade"><div class="intervenant__photo">
+<img src="img/intervenant-cjk.jpg" alt="CJK, invité du Gala Héritage" width="1333" height="2000" loading="lazy" decoding="async"></div>
+<figcaption><p class="intervenant__nom">CJK</p><p class="intervenant__role">Invité du Gala Héritage</p></figcaption></figure>
+</div></div></div></section><section class="foule" aria-label="Le public du Gala">
 <div class="foule__clip" aria-hidden="true"><div class="foule__couche foule__fond">
 <img src="img/gala-public-large.jpg" alt="" loading="lazy" decoding="async">
 </div></div>
